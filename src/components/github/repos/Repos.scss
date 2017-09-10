@@ -1,0 +1,40 @@
+.repos-component {
+  .pagination {
+    // max-width: 500px;
+  }
+
+  .repos {
+    margin-top: 20px;
+
+    .repo-card {
+      margin-bottom: 32px;
+      width: 100%;
+
+      .owner-avatar-wrapper {
+        overflow: hidden;
+
+        .owner-avatar {
+          height: 100%;
+          width: 100%;
+        }
+      }
+
+      .repo-full-name {
+        display: block;
+        overflow: hidden;
+      }
+
+      .visibility {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        .visibility-label {
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+
+
+}

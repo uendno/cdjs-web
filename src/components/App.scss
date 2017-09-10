@@ -1,0 +1,18 @@
+@import'../../node_modules/carbon-components/scss/globals/scss/styles';
+
+.nav-component-container {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.main-content {
+  margin-top: 124px;
+}
+
+.s-alert-box {
+  z-index: 1001;
+  background: none;
+  padding: 0;
+}

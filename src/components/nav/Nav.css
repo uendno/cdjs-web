@@ -1,0 +1,6 @@
+.nav-component {
+  width: 100%; }
+  .nav-component .bx--detail-page-header--with-tabs {
+    position: static; }
+    .nav-component .bx--detail-page-header--with-tabs .bx--detail-page-header-title {
+      margin-top: 32px; }
