@@ -76,11 +76,11 @@ export const getAllReposForGithubAccountId = async (accountId, page) => {
     return res.data.reposForAccountId;
 };
 
-export const createJob = async (name, gitAccountId, repoFullName) => {
+export const createJob = async (name, gitAccountId, repoFullName, branch) => {
     const res = await client.mutate({
         mutation: gql`
             mutation {
-                createJob(name: "${name}", gitAccountId: "${gitAccountId}", repoFullName: "${repoFullName}") {
+                createJob(name: "${name}", gitAccountId: "${gitAccountId}", repoFullName: "${repoFullName}", branch: "${branch}") {
                     _id,
                     name
                 }
@@ -90,4 +90,16 @@ export const createJob = async (name, gitAccountId, repoFullName) => {
     });
 
     return res.data.createJob;
+};
+
+export const getBranchesForRepo = async (accountId, repoFullName) => {
+    const res = await client.query({
+        query: gql`
+        {
+            branchesForRepo(accountId: "${accountId}", repoFullName: "${repoFullName}")
+        }
+        `
+    });
+
+    return res.data.branchesForRepo;
 };

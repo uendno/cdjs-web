@@ -23,7 +23,7 @@ class NavComponent extends Component {
                                 </svg>
                             </div>
                             <ul className="bx--tabs__nav bx--tabs__nav--hidden" role="tablist">
-                                {this._renderLink(1, "/", "Jobs")}
+                                {this._renderLink(1, "/jobs", "Jobs")}
                                 {this._renderLink(1, "/github", "Github")}
                                 {this._renderLink(1, "/settings", "Settings")}
                             </ul>

@@ -4,8 +4,17 @@ import PropTypes from 'prop-types';
 import {withRouter} from 'react-router';
 import _ from 'lodash';
 import {getBeingCreatedJob, getCurrentSelectedGithubAccountId} from '../../reducers';
-import {cancelCreatingJob, requestCreatingJob, requestJobByName} from '../../actions/jobs';
+import {cancelCreatingJob, requestCreatingJob, requestJobByName, selectBranch} from '../../actions/jobs';
+import {requestBranchesForRepo} from '../../actions/github';
 import './CreateJobModal.css';
+
+
+const _checkIfJobExists = _.debounce((name, requestJobByName, onDone) => {
+        requestJobByName(name)
+            .then(onDone);
+    },
+    500);
+
 
 class CreateJobModalComponent extends Component {
 
@@ -19,8 +28,16 @@ class CreateJobModalComponent extends Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        const {job, requestBranchesForRepo, accountId} = this.props;
+
+        if (job && prevProps.job === null) {
+            requestBranchesForRepo(accountId, job.repo.fullName);
+        }
+    }
+
     render() {
-        const {job} = this.props;
+        const {job, selectBranch} = this.props;
         const {invalidMessage, loading, name} = this.state;
 
         return (
@@ -56,6 +73,9 @@ class CreateJobModalComponent extends Component {
                                 {invalidMessage}
                             </div>
                         </div>
+
+                        <label htmlFor="text1" className="bx--label">Branch</label>
+                        {this._renderBranchSelectDropdown()}
                     </div>
 
                     <div className="bx--modal-footer">
@@ -74,23 +94,33 @@ class CreateJobModalComponent extends Component {
         )
     }
 
-
-    _checkIfJobExists(name) {
-        const {requestJobByName} = this.props;
-        requestJobByName(name)
-            .then(job => {
-                if (job) {
-                    this.nameInput.setAttribute("data-invalid", "");
-                    this.setState({
-                        invalidMessage: "A job with this name already exists",
-                    });
-                }
-
-
-            })
+    _renderBranchSelectDropdown() {
+        const {job, selectBranch} = this.props;
+        return (
+            <ul data-dropdown data-value={job ? job.repo.branch : null} className="bx--dropdown" tabIndex="0">
+                <li className="bx--dropdown-text">{job ? job.repo.branch : "Choose a branch"}</li>
+                <svg className="bx--dropdown__arrow" width="10" height="5" viewBox="0 0 10 5"
+                     fillRule="evenodd">
+                    <path d="M10 0L5 5 0 0z"/>
+                </svg>
+                <li>
+                    <ul className="bx--dropdown-list">
+                        {job ? job.branches.map(branch => (
+                            <li key={branch} data-option data-value={branch} className="bx--dropdown-item">
+                                <a
+                                    className="bx--dropdown-link"
+                                    onClick={() => selectBranch(branch)}
+                                >{branch}</a></li>
+                        )) : null}
+                    </ul>
+                </li>
+            </ul>
+        )
     }
 
+
     _handleOnNameInputChange(e) {
+        const {requestJobByName} = this.props;
         const name = e.target.value;
         this.nameInput.removeAttribute("data-invalid");
         this.setState({
@@ -98,9 +128,14 @@ class CreateJobModalComponent extends Component {
             invalidMessage: ""
         });
 
-        _.debounce(this._checkIfJobExists.bind(this), 500, {
-            maxWait: 1000
-        })(name);
+        _checkIfJobExists(name, requestJobByName, job => {
+            if (job) {
+                this.nameInput.setAttribute("data-invalid", "");
+                this.setState({
+                    invalidMessage: "A job with this name already exists",
+                });
+            }
+        });
     }
 
     async _handleCreateJob() {
@@ -117,15 +152,17 @@ class CreateJobModalComponent extends Component {
                 loading: true
             });
 
-            const newJob = await requestCreatingJob(name, accountId, job.repo.fullName);
+            const newJob = await requestCreatingJob(name, accountId, job.repo.fullName, job.repo.branch);
 
-            this.setState({
-                name: "",
-                invalidMessage: "",
-                loading: false
-            });
+            if (newJob) {
+                this.setState({
+                    name: "",
+                    invalidMessage: "",
+                    loading: false
+                });
 
-            history.replace('/');
+                history.replace('/jobs');
+            }
         }
     }
 
@@ -146,6 +183,8 @@ CreateJobModalComponent.propTypes = {
     accountId: PropTypes.string,
     requestJobByName: PropTypes.func.isRequired,
     requestCreatingJob: PropTypes.func.isRequired,
+    requestBranchesForRepo: PropTypes.func.isRequired,
+    selectBranch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -156,5 +195,7 @@ const mapStateToProps = (state) => ({
 export default withRouter(connect(mapStateToProps, {
     cancelCreatingJob,
     requestCreatingJob,
-    requestJobByName
+    requestJobByName,
+    requestBranchesForRepo,
+    selectBranch
 })(CreateJobModalComponent));

@@ -1,0 +1,9 @@
+.not-found-component {
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 124px);
+  width: 100vw; }
+  .not-found-component .not-found-image {
+    height: 150px; }

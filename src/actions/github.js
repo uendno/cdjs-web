@@ -5,12 +5,16 @@ import {
     GET_REPOS_FOR_GITHUB_ACCOUNTS_REQUEST,
     GET_REPOS_FOR_GITHUB_ACCOUNTS_COMPLETE,
     GET_REPOS_FOR_GITHUB_ACCOUNTS_ERROR,
-    SET_PAGE
+    SET_PAGE,
+    GET_BRANCHES_FOR_REPO_REQUEST,
+    GET_BRANCHES_FOR_REPO_COMPLETE,
+    GET_BRANCHES_FOR_REPO_ERROR
 } from './types';
 
 import {
     getAllGithubAccounts as getAllGithubAccountsQL,
-    getAllReposForGithubAccountId as getAllReposForGithubAccountIdQL
+    getAllReposForGithubAccountId as getAllReposForGithubAccountIdQL,
+    getBranchesForRepo as getBranchesForRepoQL
 } from '../helpers/graphql';
 
 import {showError} from '../helpers/alert';
@@ -92,6 +96,35 @@ export const changePage = async (page) => async (dispatch, getState) => {
     if (repos.length === 0) {
         dispatch(requestAllReposForCurrentGithubAccountId(page));
     } else {
-
+        return null;
     }
 };
+
+export const requestBranchesForRepo = async (accountId, repoFullName) => async (dispatch) => {
+    dispatch({
+        type: GET_BRANCHES_FOR_REPO_REQUEST,
+        accountId,
+        repoFullName
+    });
+
+    try {
+        const branches = await getBranchesForRepoQL(accountId, repoFullName);
+
+        dispatch({
+            type: GET_BRANCHES_FOR_REPO_COMPLETE,
+            accountId,
+            repoFullName,
+            branches
+        });
+
+        return branches
+    } catch (error) {
+        console.error(error.stack);
+        showError("Oops!", error.message);
+        dispatch({
+            type: GET_BRANCHES_FOR_REPO_ERROR,
+            error
+        });
+    }
+};
+

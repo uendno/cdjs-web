@@ -1,9 +1,9 @@
 import {
-    CREATE_JOB_REQUEST,
     CREATE_JOB_CANCEL,
     CREATE_JOB_COMPLETE,
     CREATE_JOB_START,
-    CREATE_JOB_ERROR
+    GET_BRANCHES_FOR_REPO_COMPLETE,
+    SELECT_BRANCH
 } from '../actions/types';
 
 
@@ -18,7 +18,34 @@ const jobs = (state = {
                 ...state,
                 beingCreatedJob: {
                     accountId: action.accountId,
-                    repo: action.repo
+                    repo: {
+                        ...action.repo,
+                        branch: "master",
+                    },
+                    branches: []
+                }
+            }
+        }
+
+        case GET_BRANCHES_FOR_REPO_COMPLETE: {
+            return {
+                ...state,
+                beingCreatedJob: {
+                    ...state.beingCreatedJob,
+                    branches: action.branches
+                }
+            }
+        }
+
+        case SELECT_BRANCH: {
+            return {
+                ...state,
+                beingCreatedJob: {
+                    ...state.beingCreatedJob,
+                    repo: {
+                        ...state.beingCreatedJob.repo,
+                        branch: action.branch
+                    }
                 }
             }
         }

@@ -9,7 +9,8 @@ import {
     CREATE_JOB_ERROR,
     GET_JOB_BY_NAME_REQUEST,
     GET_JOB_BY_NAME_COMPLETE,
-    GET_JOB_BY_NAME_ERROR
+    GET_JOB_BY_NAME_ERROR,
+    SELECT_BRANCH
 } from './types';
 import {
     getAllJobs as getAllJobQL,
@@ -81,16 +82,17 @@ export const cancelCreatingJob = () => {
     }
 };
 
-export const requestCreatingJob = async (jobName, accountId, repoFullName) => async (dispatch) => {
+export const requestCreatingJob = async (jobName, accountId, repoFullName, branch) => async (dispatch) => {
     dispatch({
         type: CREATE_JOB_REQUEST,
         jobName,
         accountId,
-        repoFullName
+        repoFullName,
+        branch
     });
 
     try {
-        const newJob = await createJobQL(jobName, accountId, repoFullName);
+        const newJob = await createJobQL(jobName, accountId, repoFullName, branch);
 
         dispatch({
             type: CREATE_JOB_COMPLETE,
@@ -109,3 +111,9 @@ export const requestCreatingJob = async (jobName, accountId, repoFullName) => as
     }
 };
 
+export const selectBranch = (branch) => {
+    return {
+        type: SELECT_BRANCH,
+        branch: branch
+    }
+};
