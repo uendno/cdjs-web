@@ -3,7 +3,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 124px);
-  width: 100vw; }
+  height: calc(100vh - 124px); }
   .not-found-component .not-found-image {
     height: 150px; }

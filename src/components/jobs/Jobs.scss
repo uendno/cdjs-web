@@ -1,10 +1,74 @@
 .jobs-component {
-  padding-top: 20px;
+  min-height: 100%;
 
-  .top-line {
-    width: 50px;
-    height: 4px;
-    background-color: #5596e6;
-    margin-bottom: 10px;
+  .page-header {
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: solid 1px #ddd;
+
+    align-items: center;
+    .page-title {
+      font-size: 18px;
+      margin-left: 30px;
+    }
+
+    .new-job-button {
+      margin-right: 20px;
+    }
   }
+
+  .row {
+    margin: 0;
+  }
+
+  .jobs-panel {
+    margin-top: 20px;
+    .jobs-table {
+      margin-top: 16px;
+      border-bottom: 0 !important;
+      th, td {
+        border: 1px !important;
+        vertical-align: middle;
+      }
+    }
+
+  }
+
+  .status-icon {
+
+    font-size: 25px;
+
+    &.created {
+
+    }
+
+    &.failed {
+      color: #ff625d;
+    }
+
+    &.building {
+      color: #337ab7;
+    }
+  }
+  .action-button {
+    margin-right: 8px;
+
+    &.red {
+      color: white;
+      background-color: #ff625d;
+    }
+  }
+
+  .build-progress-cell {
+    width: 300px;
+    .build-progress {
+      margin:0;
+    }
+  }
+
 }
+

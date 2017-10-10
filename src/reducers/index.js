@@ -1,32 +1,26 @@
 import {combineReducers} from 'redux';
 import jobs, * as fromJobs from './jobs';
-import github, * as fromGithub from './github';
+import credentials, * as fromCredentials from './credentials';
+import editCredentialModal, * as fromEditCredentialData from './editCredentialModal';
+import editJobScreen, * as fromEditJobScreen from './editJobScreen';
+import currentJob from './currentJob';
 
 const app = combineReducers({
     jobs,
-    github
+    credentials,
+    editCredentialModal,
+    editJobScreen,
+    currentJob
 });
 
 export default app;
 
-export const getAllGithubAccounts = (state) => {
-    return fromGithub.getAllAccounts(state.github);
-};
+export const getAllJobs = (state) => fromJobs.getAllJobs(state.jobs);
 
-export const getGithubReposCurrentPage = state => {
-    return fromGithub.getCurrentPage(state.github);
-};
+export const getCredentials = (state) => fromCredentials.getCredentials(state.credentials);
 
-export const getGithubCurrentNumberOfPages = (state) => {
-    return fromGithub.getCurrentNumberOfPages(state.github);
-};
+export const getEditCredentialModalData = (state) => state.editCredentialModal;
 
-export const getAllReposOfCurrentGithubAccount = (state, page) => {
-    return fromGithub.getAllReposOfCurrentAccount(state.github, page);
-};
+export const getEditJobScreen = (state) => state.editJobScreen;
 
-export const getCurrentSelectedGithubAccountId = (state) => fromGithub.getCurrentSelectedAccountId(state.github);
-
-export const checkIfGithubReposAreLoading = (state) => fromGithub.checkIfReposAreLoading(state.github);
-
-export const getBeingCreatedJob = (state) => fromJobs.getBeingCreatedJob(state.jobs);
+export const getCurrentJobDetails = (state) => state.currentJob;
