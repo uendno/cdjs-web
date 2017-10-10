@@ -1,6 +1,7 @@
 export default {
     api: {
         uri: '/api',
-        graphql: '/api/graphql'
+        graphql: '/api/graphql',
+        socketNamespace: '/web'
     }
 }

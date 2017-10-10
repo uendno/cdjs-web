@@ -1,18 +1,35 @@
-@import'../../node_modules/carbon-components/scss/globals/scss/styles';
+.app-component {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
 
-.nav-component-container {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-}
+  .nav-component-container {
+    height: 100%;
+  }
 
-.main-content {
-  margin-top: 124px;
+  .main-content {
+    flex: 1;
+    background-color: #f4f4f4;
+    height: 100vh;
+    overflow-y: auto;
+  }
 }
 
 .s-alert-box {
   z-index: 1001;
   background: none;
   padding: 0;
+}
+
+.button-with-icon {
+  i {
+    margin-right: 8px;
+    font-size: 16px;
+  }
+
+  &.no-text {
+    i {
+      margin-right: 0;
+    }
+  }
 }

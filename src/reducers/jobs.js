@@ -1,60 +1,44 @@
 import {
-    CREATE_JOB_CANCEL,
-    CREATE_JOB_COMPLETE,
-    CREATE_JOB_START,
-    GET_BRANCHES_FOR_REPO_COMPLETE,
-    SELECT_BRANCH
+    GET_ALL_JOBS_COMPLETE,
+    UPDATE_JOB_BUILD_DATA
 } from '../actions/types';
 
 
 const jobs = (state = {
     byId: {},
-    ids: [],
-    beingCreatedJob: null
+    ids: []
 }, action) => {
     switch (action.type) {
-        case CREATE_JOB_START: {
+
+        case GET_ALL_JOBS_COMPLETE: {
+            const ids = [];
+            const byId = {};
+            const jobs = action.jobs;
+
+            jobs.forEach(job => {
+                ids.push(job._id);
+                byId[job._id] = job;
+            });
+
             return {
                 ...state,
-                beingCreatedJob: {
-                    accountId: action.accountId,
-                    repo: {
-                        ...action.repo,
-                        branch: "master",
-                    },
-                    branches: []
-                }
+                ids,
+                byId
             }
         }
 
-        case GET_BRANCHES_FOR_REPO_COMPLETE: {
-            return {
-                ...state,
-                beingCreatedJob: {
-                    ...state.beingCreatedJob,
-                    branches: action.branches
-                }
-            }
-        }
+        case UPDATE_JOB_BUILD_DATA: {
+            const byId = {...state.byId};
+            const job = byId[action.job];
 
-        case SELECT_BRANCH: {
-            return {
-                ...state,
-                beingCreatedJob: {
-                    ...state.beingCreatedJob,
-                    repo: {
-                        ...state.beingCreatedJob.repo,
-                        branch: action.branch
-                    }
-                }
-            }
-        }
+            byId[job._id] = {
+                ...job,
+                lastBuild: action.build
+            };
 
-        case CREATE_JOB_COMPLETE:
-        case CREATE_JOB_CANCEL: {
             return {
                 ...state,
-                beingCreatedJob: null
+                byId
             }
         }
 
@@ -65,7 +49,6 @@ const jobs = (state = {
 
 export default jobs;
 
-export const getBeingCreatedJob = (state) => state.beingCreatedJob;
 
 export const getAllJobs = (state) => {
     return state.ids.map(id => state.byId[id]);
