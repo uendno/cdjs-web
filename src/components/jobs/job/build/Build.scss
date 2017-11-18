@@ -1,0 +1,18 @@
+.build-component {
+  .page-header {
+    .header-info {
+      .build-progress-component-wrapper {
+        width: 400px;
+        margin-left: 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+  }
+
+
+  .log-monitor-wrapper {
+    margin-top: 24px;
+  }
+}

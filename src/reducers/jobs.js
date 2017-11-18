@@ -1,6 +1,8 @@
+import _ from 'lodash';
 import {
     GET_ALL_JOBS_COMPLETE,
-    UPDATE_JOB_BUILD_DATA
+    GET_JOB_DETAILS_COMPLETE,
+    PLAY_JOB_COMPLETE
 } from '../actions/types';
 
 
@@ -8,16 +10,39 @@ const jobs = (state = {
     byId: {},
     ids: []
 }, action) => {
-    switch (action.type) {
 
+    const ids = [...state.ids];
+    const byId = {...state.byId};
+
+
+    const addOrUpdateJobIfNeeded = (job) => {
+
+        let clone = {...job};
+
+        if (clone.lastBuild) {
+            clone.lastBuild = clone.lastBuild._id
+        }
+
+        if (clone.builds) {
+            clone = _.omit(clone, 'builds');
+        }
+
+        byId[clone._id] = {
+            ...byId[clone._id],
+            ...clone
+        };
+
+        if (ids.indexOf(clone._id) === -1) {
+            ids.push(clone._id);
+        }
+    };
+
+    switch (action.type) {
         case GET_ALL_JOBS_COMPLETE: {
-            const ids = [];
-            const byId = {};
             const jobs = action.jobs;
 
             jobs.forEach(job => {
-                ids.push(job._id);
-                byId[job._id] = job;
+                addOrUpdateJobIfNeeded(job);
             });
 
             return {
@@ -27,20 +52,27 @@ const jobs = (state = {
             }
         }
 
-        case UPDATE_JOB_BUILD_DATA: {
-            const byId = {...state.byId};
-            const job = byId[action.job];
-
-            byId[job._id] = {
-                ...job,
-                lastBuild: action.build
-            };
+        case GET_JOB_DETAILS_COMPLETE: {
+            addOrUpdateJobIfNeeded(action.job);
 
             return {
                 ...state,
+                ids,
                 byId
             }
         }
+
+        case PLAY_JOB_COMPLETE: {
+            const job = getJob(state, action.jobId);
+            addOrUpdateJobIfNeeded({...job, lastBuild: action.build});
+
+            return {
+                ...state,
+                ids,
+                byId
+            }
+        }
+
 
         default:
             return state;
@@ -52,4 +84,8 @@ export default jobs;
 
 export const getAllJobs = (state) => {
     return state.ids.map(id => state.byId[id]);
+};
+
+export const getJob = (state, id) => {
+    return state.byId[id];
 };

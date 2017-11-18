@@ -4,6 +4,30 @@
   height: 100%; }
   .app-component .nav-component-container {
     height: 100%; }
+  .app-component .page-header {
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    height: 60px;
+    display: flex;
+    justify-content: flex-start;
+    border-bottom: solid 1px #ddd;
+    align-items: center; }
+    .app-component .page-header .header-info {
+      flex: 1;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: row; }
+      .app-component .page-header .header-info .page-title {
+        font-size: 18px;
+        margin-left: 30px; }
+      .app-component .page-header .header-info .back-button {
+        margin-left: 20px; }
+    .app-component .page-header .action-buttons .action-button {
+      margin-right: 16px; }
+  .app-component .row {
+    margin: 0; }
   .app-component .main-content {
     flex: 1;
     background-color: #f4f4f4;

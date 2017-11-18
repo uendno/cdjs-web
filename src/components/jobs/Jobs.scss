@@ -1,26 +1,6 @@
 .jobs-component {
   min-height: 100%;
 
-  .page-header {
-    background-color: white;
-    margin: 0;
-    padding: 0;
-    height: 60px;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: solid 1px #ddd;
-
-    align-items: center;
-    .page-title {
-      font-size: 18px;
-      margin-left: 30px;
-    }
-
-    .new-job-button {
-      margin-right: 20px;
-    }
-  }
-
   .row {
     margin: 0;
   }
@@ -54,21 +34,29 @@
       color: #337ab7;
     }
   }
-  .action-button {
-    margin-right: 8px;
 
-    &.red {
-      color: white;
-      background-color: #ff625d;
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row;
+
+    .action-button {
+      margin-right: 8px;
+
+      &.red {
+        color: white;
+        background-color: #ff625d;
+      }
     }
   }
 
-  .build-progress-cell {
-    width: 300px;
-    .build-progress {
-      margin:0;
-    }
-  }
+  //.build-progress-cell {
+  //  width: 300px;
+  //  .build-progress {
+  //    margin: 0;
+  //  }
+  //}
 
 }
 

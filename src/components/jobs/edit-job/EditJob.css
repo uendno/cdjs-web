@@ -1,20 +1,9 @@
 .new-job-component {
   background-color: white;
   min-height: 100%; }
-  .new-job-component .page-header {
-    background-color: white;
-    margin: 0;
-    padding: 0;
-    height: 60px;
-    display: flex;
-    justify-content: flex-start;
-    border-bottom: solid 1px #ddd;
-    align-items: center; }
-    .new-job-component .page-header .page-title {
-      font-size: 18px;
-      margin-left: 30px; }
-    .new-job-component .page-header .back-button {
-      margin-left: 20px; }
+  .new-job-component .delete-job-button {
+    color: white;
+    background-color: #cd4449; }
   .new-job-component .content {
     padding: 16px 60px; }
     .new-job-component .content .middle {

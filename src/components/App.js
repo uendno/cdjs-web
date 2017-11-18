@@ -11,6 +11,7 @@ import AlertComponent from './alert/Alert';
 import EditJobComponent from './jobs/edit-job/EditJob';
 import CreateCredentialModal from './edit-credential-modal/EditCredentialModal';
 import CredentialsComponent from './credentials/Credentials';
+import BuildComponent from './jobs/job/build/Build';
 import NotFoundComponent from './not-found/NotFound';
 
 class App extends Component {
@@ -25,7 +26,8 @@ class App extends Component {
                 <div className="main-content">
                     <Switch>
                         <Route exact path="/" render={() => <Redirect to="/jobs"/>}/>
-                        <Route exact path="/jobs/new" component={EditJobComponent}/>
+                        <Route path="/jobs/:id/builds/:buildId" component={BuildComponent}/>
+                        <Route path="/jobs/:id/edit" component={EditJobComponent}/>
                         <Route path="/jobs/:id" component={JobComponent}/>
                         <Route exact path="/jobs" component={JobsComponent}/>
                         <Route exect path="/credentials" component={CredentialsComponent}/>

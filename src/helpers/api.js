@@ -13,10 +13,21 @@ export const getAllJobs = async () => {
                     name
                     repoType
                     lastBuild {
+                        _id
+                        number
                         status
                         startAt
                         doneAt
+                        pusher
+                        commits
+                        stages {
+                            _id
+                            status
+                            startAt
+                            doneAt
+                        }
                     }
+                    status
                 }
             }
         `
@@ -25,14 +36,21 @@ export const getAllJobs = async () => {
     return res.allJobs;
 };
 
-export const checkJobName = async (name) => {
+export const checkJobName = async (name, currentJobId) => {
+
+    let params;
+
+    if (currentJobId) {
+        params = `name: "${name}", currentJobId: "${currentJobId}"`
+    } else {
+        params = `name: "${name}"`
+    }
+
     const res = await client.request(
         `
             {
-                checkJobName(name: "${name}"){
+                checkJobName(${params}){
                     valid
-                    generatedSecret,
-                    webhookUrl
               }
             }
         `
@@ -41,9 +59,9 @@ export const checkJobName = async (name) => {
     return res.checkJobName;
 };
 
-export const createJob = async (name, repoType, repoUrl, branch, credentialId, description, secret, cdFilePath) => {
+export const updateJob = async (id, name, repoType, repoUrl, branch, credentialId, description, cdFilePath) => {
 
-    let params = `name: "${name}", repoType: "${repoType}", repoUrl: "${repoUrl}", branch: "${branch}", secret: "${secret}"`;
+    let params = `id: "${id}", name: "${name}", repoType: "${repoType}", repoUrl: "${repoUrl}", branch: "${branch}"`;
 
     const optionalParams = _.pickBy({
         credentialId,
@@ -60,19 +78,39 @@ export const createJob = async (name, repoType, repoUrl, branch, credentialId, d
     const res = await client.request(
         `
             mutation {
-                createJob(${params}) {
+                updateJob(${params}) {
                     _id
                     name
                     createdAt
                     repoUrl
                     repoType
                     branch
-                    credential {
-                        _id
-                        name
-                        type
-                        data
-                    }
+                    credential
+                }
+            }
+        `
+    );
+
+    return res.updateJob;
+};
+
+export const deleteJob = async (id) => {
+    return client.request(
+        `
+            mutation {
+                deleteJob(id: "${id}")
+            }
+        `
+    )
+};
+
+export const createJob = async (name) => {
+    const res = await client.request(
+        `   
+            mutation {
+                createJob(name: "${name}") {
+                    _id
+                    name
                 }
             }
         `
@@ -195,7 +233,21 @@ export const play = async (id) => {
     const res = await client.request(
         `
             mutation {
-                play(id: "${id}") 
+                play(id: "${id}") {
+                    _id
+                    number
+                    status
+                    startAt
+                    doneAt
+                    pusher
+                    commits
+                    stages {
+                        _id
+                        status
+                        startAt
+                        doneAt
+                    }
+                } 
             }
         `
     );
@@ -203,53 +255,90 @@ export const play = async (id) => {
     return res.play;
 };
 
-export const jobDetails = async (id) => {
+export const jobDetails = async (id, includeBuilds) => {
+
+    let fields;
+
+    if (includeBuilds === true) {
+        fields = `
+            _id
+            name
+            repoType
+            cdFilePath
+            description
+            createdAt
+            repoUrl
+            branch
+            builds {
+                _id
+                number
+                status
+                startAt
+                doneAt
+                pusher
+                commits
+                stages {
+                    _id
+                    status
+                    startAt
+                    doneAt
+                }
+            }
+            credential
+            webhookUrl
+            status
+        `
+    } else {
+        fields = `
+            _id
+            name
+            repoType
+            cdFilePath
+            description
+            createdAt
+            repoUrl
+            branch
+            credential
+            webhookUrl
+            status
+        `
+    }
+
     const res = await client.request(
         `
             query {
                 jobDetails(id: "${id}") {
-                    _id
-                    name
-                    repoType
-                    cdFilePath
-                    description
-                    createdAt
-                    repoUrl
-                    branch
-                    lastBuild {
-                        _id
-                        number
-                        status
-                        startAt
-                        doneAt
-                        pusher
-                        commits
-                        stages {
-                            _id
-                            status
-                            startAt
-                            doneAt
-                        }
-                    }
-                    builds {
-                        _id
-                        number
-                        status
-                        startAt
-                        doneAt
-                        pusher
-                        commits
-                        stages {
-                            _id
-                            status
-                            startAt
-                            doneAt
-                        }
-                    }
+                    ${fields}
                 }
             }
         `
     );
 
     return res.jobDetails;
+};
+
+export const buildDetails = async (id) => {
+    const res = await client.request(
+        `
+            query {
+                buildDetails(id: "${id}") {
+                    _id
+                    number
+                    status
+                    startAt
+                    doneAt
+                    pusher
+                    commits
+                    stages {
+                        _id
+                        status
+                        startAt
+                        doneAt
+                    }
+                }
+            }
+        `
+    );
+
+    return res.buildDetails;
 };

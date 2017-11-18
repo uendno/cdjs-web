@@ -6,8 +6,10 @@ import {withRouter} from 'react-router';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import './Jobs.css';
-import {requestAllJobs, requestPlayJob} from '../../actions/jobs';
+import {requestAllJobs, requestPlayJob, showCreateJobModal} from '../../actions/jobs';
 import {getAllJobs} from '../../reducers';
+import CreateJobModalComponent from './create-job-modal/CreateJobModal';
+import BuildProgressComponent from './build-progress/BuildProgress';
 
 
 class HomeComponent extends Component {
@@ -18,15 +20,20 @@ class HomeComponent extends Component {
     }
 
     render() {
-        const {jobs} = this.props;
+        const {jobs, showCreateJobModal} = this.props;
 
         return (
             <div className="jobs-component">
                 <div className="page-header">
-                    <span className="page-title">Jobs</span>
-                    <Button className="button-with-icon new-job-button"
-                            onClick={this._handleCreateNewJob.bind(this)}
-                    ><i className="fa fa-plus-circle" aria-hidden="true"/> New Job</Button>
+                    <div className="header-info">
+                        <span className="page-title">Jobs</span>
+                    </div>
+                    <div className="action-buttons">
+                        <Button className="button-with-icon action-button"
+                                onClick={showCreateJobModal}
+                        ><i className="fa fa-plus-circle" aria-hidden="true"/> New Job</Button>
+                    </div>
+
                 </div>
                 <Row className="show-grid">
                     <Col md={12}>
@@ -48,14 +55,16 @@ class HomeComponent extends Component {
                         </Panel>
                     </Col>
                 </Row>
+
+                <CreateJobModalComponent/>
+
             </div>
         )
     }
 
     _renderJob(job, index) {
-        const {requestPlayJob} = this.props;
         const lastBuild = job.lastBuild;
-        const status = lastBuild && lastBuild.status || 'created';
+        const status = (lastBuild && lastBuild.status) || 'created';
 
         return (
             <tr key={index}>
@@ -69,18 +78,31 @@ class HomeComponent extends Component {
                 </td>
                 <td>{this._renderCommitInfo(lastBuild)}</td>
                 <td className="build-progress-cell">
-                    {this._renderLastBuild(lastBuild)}
+                    <BuildProgressComponent build={lastBuild || {}} includeDescription={true}/>
                 </td>
                 <td>
-                    <Button className="action-button"
-                            onClick={() => requestPlayJob(job._id)}
-                    ><i className="fa fa-play" aria-hidden="true"/></Button>
-                    <Button className="action-button"
-                            onClick={() => {}}
-                    ><i className="fa fa-cog" aria-hidden="true"/></Button>
+                    {this._renderActions(job)}
                 </td>
             </tr>
         );
+    }
+
+    _renderActions(job) {
+        const {requestPlayJob, history} = this.props;
+
+        return (
+            <div className="actions">
+                <Button className="action-button"
+                        onClick={() => requestPlayJob(job._id)}
+                        disabled={job.status !== 'active'}
+                ><i className="fa fa-play" aria-hidden="true"/></Button>
+                <Button className="action-button"
+                        onClick={() => {
+                            history.push(`/jobs/${job._id}/edit`)
+                        }}
+                ><i className="fa fa-cog" aria-hidden="true"/></Button>
+            </div>
+        )
     }
 
     _renderCommitInfo(lastBuild) {
@@ -108,49 +130,49 @@ class HomeComponent extends Component {
             case 'preparing':
             case 'building':
                 return <i className="fa fa-circle-o-notch fa-spin status-icon building" aria-hidden="true"/>;
+            default:
+                return null;
 
         }
     }
 
-    _renderLastBuild(lastBuild) {
-        if (lastBuild) {
-            switch (lastBuild.status) {
-                case 'pending':
-                    return <ProgressBar bsStyle="warning" now={0} label="Pending..."/>;
-                case 'preparing':
-                    return <ProgressBar className="build-progress" bsStyle="warning" active label="Preparing..." now={100}/>;
-                case 'building': {
-                    const pendings = lastBuild.stages.filter(s => s.status === 'pending');
-                    const rate = 1 - pendings.length / lastBuild.stages.length;
-                    return <ProgressBar className="build-progress" active now={rate * 100}/>
-                }
-
-                default:
-                    return (
-                        <p>
-                            {moment(lastBuild.startAt).calendar()}
-                            <br/>
-                            in <b>{moment.duration(moment(lastBuild.doneAt).diff(moment(lastBuild.startAt))).format("h[h] m[m] s[s]")}</b>
-                        </p>
-                    )
-
-            }
-        }
-        else {
-            return null;
-        }
-    }
-
-    _handleCreateNewJob() {
-        const {history} = this.props;
-        history.push('/jobs/new');
-    }
+    // _renderLastBuild(lastBuild) {
+    //     if (lastBuild) {
+    //         switch (lastBuild.status) {
+    //             case 'pending':
+    //                 return <ProgressBar bsStyle="warning" now={0} label="Pending..."/>;
+    //             case 'preparing':
+    //                 return <ProgressBar className="build-progress" bsStyle="warning" active label="Preparing..."
+    //                                     now={100}/>;
+    //             case 'building': {
+    //                 const pendings = lastBuild.stages.filter(s => s.status === 'pending');
+    //                 const rate = 1 - pendings.length / lastBuild.stages.length;
+    //                 return <ProgressBar className="build-progress" active now={rate * 100}/>
+    //             }
+    //
+    //             default:
+    //                 return (
+    //                     <p>
+    //                         {moment(lastBuild.startAt).calendar()}
+    //                         <br/>
+    //                         duration:
+    //                         <b>{moment.duration(moment(lastBuild.doneAt).diff(moment(lastBuild.startAt))).format("h[h] m[m] s[s]")}</b>
+    //                     </p>
+    //                 )
+    //
+    //         }
+    //     }
+    //     else {
+    //         return null;
+    //     }
+    // }
 }
 
 HomeComponent.propTypes = {
     requestAllJobs: PropTypes.func.isRequired,
     jobs: PropTypes.array.isRequired,
-    requestPlayJob: PropTypes.func.isRequired
+    requestPlayJob: PropTypes.func.isRequired,
+    showCreateJobModal: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -159,5 +181,6 @@ const mapStateToProps = (state) => ({
 
 export default withRouter(connect(mapStateToProps, {
     requestAllJobs,
-    requestPlayJob
+    requestPlayJob,
+    showCreateJobModal
 })(HomeComponent));

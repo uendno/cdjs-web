@@ -26,11 +26,14 @@ import {
     requestUpdateCredential
 } from '../../actions/credentials';
 
-const _checkIfCredentialExists = _.debounce(async (name, currentCredentialId, checkCredentialName, onDone) => {
+const _checkIfCredentialExists = _.throttle(async (name, currentCredentialId, checkCredentialName, onDone) => {
         const result = await checkCredentialName(name, currentCredentialId);
         onDone(result);
     },
-    500);
+    500, {
+        leading: false,
+        trailing: true
+    });
 
 
 class EditCredentialModal extends Component {
@@ -80,7 +83,7 @@ class EditCredentialModal extends Component {
                 <FormControl type="text"
                              id="credential-name-input"
                              placeholder="Enter a unique name"
-                             value={name}
+                             value={name || ""}
                              onChange={this._handleNameInputChange.bind(this)}
                 />
                 <FormControl.Feedback/>
@@ -127,7 +130,7 @@ class EditCredentialModal extends Component {
                         <ControlLabel>Username</ControlLabel>
                         <FormControl type="text"
                                      id="username-input"
-                                     value={data.username}
+                                     value={data.username || ""}
                                      onChange={(e) => {
                                          updateBeingEditedCredential({
                                              data: {
@@ -143,7 +146,7 @@ class EditCredentialModal extends Component {
                     <FormGroup>
                         <ControlLabel>Password</ControlLabel>
                         <FormControl type="password"
-                                     value={data.password}
+                                     value={data.password || ""}
                                      onChange={(e) => updateBeingEditedCredential({
                                          data: {
                                              ...data,
@@ -175,6 +178,7 @@ class EditCredentialModal extends Component {
             invalidNameMessage: "",
             loading: true
         });
+
 
         _checkIfCredentialExists(name, modalData._id, checkCredentialName, result => {
             updateBeingEditedCredential({loading: false});

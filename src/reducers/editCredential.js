@@ -1,44 +1,44 @@
-import {UPDATE_BEING_EDITED_JOB, EDIT_JOB_START, EDIT_JOB_CLOSE} from '../actions/types';
+import {
+    EDIT_CREDENTIAL_START, EDIT_CREDENTIAL_CLOSE, UPDATE_BEING_EDITED_CREDENTIAL,
+} from '../actions/types';
 
 const initialState = {
+    _id: null,
     invalidNameMessage: "",
-    invalidRepoUrlMessage: "",
-    loading: false,
     name: "",
-    webhookUrl: "",
-    repoType: "github",
-    branch: "master",
-    cdFile: "cd.js",
-    description: "",
-    repoUrl: "",
-    credentialId: null,
+    type: "username/password",
+    data: {},
+    loading: false,
     mode: 'create'
 };
 
-const editJobScreen = (state = initialState, action) => {
+const editCredentialModal = (state = initialState, action) => {
     switch (action.type) {
 
-        case EDIT_JOB_START: {
+        case EDIT_CREDENTIAL_START: {
 
-            if (action.job) {
+            if (action.credential) {
                 return {
                     ...initialState,
-                    ...action.job,
+                    ...action.credential,
+                    show:true,
                     mode: action.mode
                 }
             } else {
                 return {
                     ...initialState,
+                    ...state,
+                    show: true,
                     mode: action.mode
                 }
             }
         }
 
-        case EDIT_JOB_CLOSE: {
+        case EDIT_CREDENTIAL_CLOSE: {
             return {...initialState}
         }
 
-        case UPDATE_BEING_EDITED_JOB: {
+        case UPDATE_BEING_EDITED_CREDENTIAL: {
             return {
                 ...state,
                 ...action.data
@@ -50,5 +50,4 @@ const editJobScreen = (state = initialState, action) => {
     }
 };
 
-export default editJobScreen;
-
+export default editCredentialModal;

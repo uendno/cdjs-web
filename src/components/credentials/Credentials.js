@@ -20,10 +20,14 @@ class CredentialsComponent extends Component {
         return (
             <div className="credentials-component">
                 <div className="page-header">
-                    <span className="page-title">Credentials</span>
-                    <Button className="button-with-icon new-credential-button"
-                            onClick={() => openCreateCredentialModal('create')}
-                    ><i className="fa fa-plus-circle" aria-hidden="true"/> New Credential</Button>
+                    <div className="header-info">
+                        <span className="page-title">Credentials</span>
+                    </div>
+                    <div className="action-buttons">
+                        <Button className="button-with-icon action-button new-credential-button"
+                                onClick={() => openCreateCredentialModal('create')}
+                        ><i className="fa fa-plus-circle" aria-hidden="true"/> New Credential</Button>
+                    </div>
                 </div>
                 <Row className="content">
                     <Col md={12}>

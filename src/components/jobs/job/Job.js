@@ -5,28 +5,36 @@ import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
 import Proptypes from 'prop-types';
 import './Job.css';
-import {getCurrentJobDetails} from '../../../reducers';
-import {requestJobDetails} from '../../../actions/jobs';
+import {getJob, getBuildsForJob} from '../../../reducers';
+import {requestJobDetails, requestPlayJob} from '../../../actions/jobs';
+import BuildProgressComponent from '../build-progress/BuildProgress';
 
 class JobComponent extends Component {
-
     componentDidMount() {
         const {match, requestJobDetails} = this.props;
         const jobId = match.params.id;
 
-        requestJobDetails(jobId);
+        requestJobDetails(jobId, true);
     }
 
     render() {
-        const {job} = this.props;
+        const {job, builds, requestPlayJob} = this.props;
 
         return (
             <div className="job-component">
                 <div className="page-header">
-                    <Button className="button-with-icon no-text back-button"
-                            onClick={this._handleCancel.bind(this)}
-                    ><i className="fa fa-arrow-left" aria-hidden="true"/></Button>
-                    <span className="page-title">{job.name}</span>
+                    <div className="header-info">
+                        <Button className="button-with-icon no-text back-button"
+                                onClick={this._handleCancel.bind(this)}
+                        ><i className="fa fa-arrow-left" aria-hidden="true"/></Button>
+                        <span className="page-title">{job.name}</span>
+                    </div>
+                    <div className="action-buttons">
+                        <Button className="button-with-icon play-job-button action-button"
+                                onClick={() => requestPlayJob(job._id)}
+                                disabled={job.status !== 'active'}
+                        ><i className="fa fa-play" aria-hidden="true"/> Trigger a build</Button>
+                    </div>
                 </div>
                 <Row className="show-grid">
                     <Col md={12}>
@@ -34,7 +42,7 @@ class JobComponent extends Component {
 
                         </Panel>
                         <Panel className="builds-panel">
-                            {job.builds ? job.builds.map((build, index) => this._renderBuild(build, index)) : null}
+                            {builds.map((build, index) => this._renderBuild(job, build, index))}
                         </Panel>
                     </Col>
                 </Row>
@@ -47,17 +55,20 @@ class JobComponent extends Component {
         history.goBack();
     }
 
-    _renderBuild(build, index) {
+    _renderBuild(job, build, index) {
         return (
             <Row key={index}>
                 <Col md={1}>
-                    <Link to="#">#{build.number}</Link>
+                    <Link to={`/jobs/${job._id}/builds/${build._id}`}>#{build.number}</Link>
                 </Col>
                 <Col md={3}>
                     {this._renderCommitInfo(build)}
                 </Col>
                 <Col md={5}>
-                    {this._renderProgress(build)}
+                    <BuildProgressComponent build={build} includeDescription={true}/>
+                </Col>
+                <Col md={1}>
+
                 </Col>
             </Row>
         )
@@ -76,57 +87,36 @@ class JobComponent extends Component {
         }
     }
 
-    _renderProgress(build) {
-        switch (build.status) {
-            case 'pending':
-                return (
-                    <div>
-                        <ProgressBar bsStyle="warning" now={100} label="Pending..."/>
-                    </div>
-                );
-            case 'preparing':
-                return (
-                    <div>
-                        <ProgressBar className="build-progress" bsStyle="warning" active label="Preparing..."
-                                     now={100}/>
-                    </div>
-                );
-            case 'building':
-                return (
-                    <div>
-                        <ProgressBar active now={45}/>
-                    </div>
-                );
-            case 'failed':
 
-                let failedStage;
+    _renderTime(build) {
+        return (
+            <div>
 
-                if (build.stages.length === 0) {
-                    failedStage = 'prepare';
-                } else {
-                    failedStage = build.stages[build.stages.length - 1];
-                }
-
-                return (
-                    <div>
-                        <ProgressBar now={100} bsStyle="danger" label="Failed"/>
-                        <p>Failed at: <Link to="">{failedStage}</Link></p>
-                    </div>
-                );
-        }
+            </div>
+        )
     }
 
 }
 
 JobComponent.propTypes = {
     job: Proptypes.object.isRequired,
-    requestJobDetails: Proptypes.func.isRequired
+    builds: Proptypes.array.isRequired,
+    requestJobDetails: Proptypes.func.isRequired,
+    requestPlayJob: Proptypes.func.isRequired
 };
 
-const mapStateToProps = (state) => ({
-    job: getCurrentJobDetails(state)
-});
+const mapStateToProps = (state, ownProps) => {
+
+    const jobId = ownProps.match.params.id;
+
+    return {
+        job: getJob(state, jobId) || {},
+        builds: getBuildsForJob(state, jobId)
+    }
+
+};
 
 export default withRouter(connect(mapStateToProps, {
-    requestJobDetails
+    requestJobDetails,
+    requestPlayJob
 })(JobComponent));
