@@ -53,11 +53,11 @@ class CredentialsComponent extends Component {
         )
     }
 
-    _renderCredential(credential, index) {
+    _renderCredential(credential) {
         const {deleteCredential, openCreateCredentialModal} = this.props;
 
         return (
-            <tr key={index}>
+            <tr key={credential._id}>
                 <td>{credential.name}</td>
                 <td>{credential.type}</td>
                 <td>{this._renderCredentialData(credential)}</td>

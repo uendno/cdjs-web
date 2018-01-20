@@ -2,7 +2,9 @@ import _ from 'lodash';
 import {
     GET_ALL_JOBS_COMPLETE,
     GET_JOB_DETAILS_COMPLETE,
-    PLAY_JOB_COMPLETE
+    PLAY_JOB_COMPLETE,
+    CREATE_BUILD,
+    DELETE_JOB_COMPLETE
 } from '../actions/types';
 
 
@@ -11,8 +13,8 @@ const jobs = (state = {
     ids: []
 }, action) => {
 
-    const ids = [...state.ids];
-    const byId = {...state.byId};
+    const ids = [];
+    const byId = {};
 
 
     const addOrUpdateJobIfNeeded = (job) => {
@@ -62,6 +64,7 @@ const jobs = (state = {
             }
         }
 
+        case CREATE_BUILD:
         case PLAY_JOB_COMPLETE: {
             const job = getJob(state, action.jobId);
             addOrUpdateJobIfNeeded({...job, lastBuild: action.build});
@@ -70,6 +73,21 @@ const jobs = (state = {
                 ...state,
                 ids,
                 byId
+            }
+        }
+
+        case DELETE_JOB_COMPLETE: {
+            const id = action.id;
+
+            const byId = {...state.byId};
+            const ids = [...state.ids].filter(i => i !== id);
+
+            byId[id] = null;
+
+            return {
+                ...state,
+                byId,
+                ids
             }
         }
 

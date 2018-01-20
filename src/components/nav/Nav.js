@@ -16,6 +16,7 @@ class NavComponent extends Component {
                 >
                     {this._renderLink("/jobs", "Jobs", <i className="fa fa-server nav-item-icon" aria-hidden="true"/>)}
                     {this._renderLink("/credentials", "Credentials", <i className="fa fa-lock nav-item-icon" aria-hidden="true"/>)}
+                    {this._renderLink("/agents", "Agents", <i className="fa fa-sitemap nav-item-icon" aria-hidden="true"/>)}
                     {this._renderLink("/settings", "Settings")}
                 </div>
             </div>
@@ -29,13 +30,13 @@ class NavComponent extends Component {
 
     _renderLink(path, name, icon) {
         return (
-            <NavLink to={path}                                                   
+            <NavLink to={path}
                      className="nav-item"
                      replace
                      activeClassName="active">
                 {icon}
                 <span className="nav-item-text"> {name} </span>
-            </NavLink>                                                              
+            </NavLink>
         )
     }
 }

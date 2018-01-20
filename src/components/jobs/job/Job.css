@@ -1,6 +1,8 @@
 .job-component {
   min-height: 100%; }
   .job-component .row {
-    margin: 0; }
+    margin: 0;
+    padding-bottom: 32px;
+    padding-top: 16px; }
   .job-component .builds-panel, .job-component .info-panel {
     margin-top: 20px; }

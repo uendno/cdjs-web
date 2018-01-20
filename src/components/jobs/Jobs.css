@@ -9,13 +9,16 @@
       border-bottom: 0 !important; }
       .jobs-component .jobs-panel .jobs-table th, .jobs-component .jobs-panel .jobs-table td {
         border: 1px !important;
-        vertical-align: middle; }
+        vertical-align: middle;
+        text-align: center; }
   .jobs-component .status-icon {
     font-size: 25px; }
     .jobs-component .status-icon.failed {
       color: #ff625d; }
     .jobs-component .status-icon.building {
       color: #337ab7; }
+    .jobs-component .status-icon.success {
+      color: #5cb85c; }
   .jobs-component .actions {
     display: flex;
     align-items: center;

@@ -23,7 +23,8 @@ class LogViewerComponent extends Component {
                     <span className="timestamp">{log.timestamp}</span> <span
                     className={`level ${log.level}`}>[{log.level.toUpperCase()}]</span>
                 </div>
-                <span className={`message ${log.level}`}> {log.message}</span>
+                <span
+                    className={`message ${log.level} ${log.label || ''} ${log.message.includes('[cd.js]') ? 'runner' : ''}`}> {log.message}</span>
             </div>
         )
     }

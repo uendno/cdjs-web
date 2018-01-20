@@ -1,10 +1,11 @@
+import isGitUrl from 'is-git-url';
 import {
     GET_ALL_JOBS_REQUEST,
     GET_ALL_JOBS_COMPLETE,
     GET_ALL_JOBS_ERROR,
     CREATE_JOB_REQUEST,
     UPDATE_BEING_EDITED_JOB,
-    UPDATE_EDIT_JOB_FORM_DATA,
+    UPDATE_EDIT_JOB_MODAL_DATA,
     CREATE_JOB_COMPLETE,
     CREATE_JOB_ERROR,
     CHECK_JOB_NAME_REQUEST,
@@ -20,7 +21,6 @@ import {
     DELETE_JOB_REQUEST,
     DELETE_JOB_COMPLETE,
     DELETE_JOB_ERROR,
-    UPDATE_JOB_BUILD_DATA,
     SHOW_CREATE_JOB_MODAL, HIDE_CREATE_JOB_MODAL, UPDATE_JOB_REQUEST, UPDATE_JOB_COMPLETE
 } from './types';
 import {
@@ -31,40 +31,34 @@ import {
     jobDetails,
     createJob,
     deleteJob
-} from '../helpers/api';
-import {showError} from '../helpers/alert';
-import {getDataForJobNameComponent} from '../reducers';
+} from '../helpers/graphql';
 
-export const requestAllJobs = async () => async (dispatch) => {
+import {getDataForJobNameComponent, getEditJobData} from '../reducers';
 
-    dispatch({
-        type: GET_ALL_JOBS_REQUEST
-    });
+export const requestAllJobs = async () => ({
+    func: async (dispatch) => {
 
-    try {
+        dispatch({
+            type: GET_ALL_JOBS_REQUEST
+        });
+
         const jobs = await getAllJobQL();
         dispatch({
             type: GET_ALL_JOBS_COMPLETE,
             jobs
-        });
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
+        })
+    },
 
+    errorType: GET_ALL_JOBS_ERROR
+});
+
+export const checkJobName = (name, jobId) => ({
+    func: async (dispatch) => {
         dispatch({
-            type: GET_ALL_JOBS_ERROR,
-            error
+            type: CHECK_JOB_NAME_REQUEST,
+            name
         });
-    }
-};
 
-export const checkJobName = (name, jobId) => async (dispatch) => {
-    dispatch({
-        type: CHECK_JOB_NAME_REQUEST,
-        name
-    });
-
-    try {
         const result = await checkJobNameQL(name, jobId);
 
         dispatch({
@@ -73,16 +67,10 @@ export const checkJobName = (name, jobId) => async (dispatch) => {
         });
 
         return result;
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
+    },
 
-        dispatch({
-            type: CHECK_JOB_NAME_ERROR,
-            error
-        });
-    }
-};
+    errorType: CHECK_JOB_NAME_ERROR
+});
 
 export const updateBeingEditedJob = (data) => {
     return {
@@ -91,9 +79,9 @@ export const updateBeingEditedJob = (data) => {
     }
 };
 
-export const updateEditJobFormData = (data) => {
+export const updateEditJobModalData = (data) => {
     return {
-        type: UPDATE_EDIT_JOB_FORM_DATA,
+        type: UPDATE_EDIT_JOB_MODAL_DATA,
         data
     }
 };
@@ -104,22 +92,65 @@ export const showCreateJobModal = () => {
     }
 };
 
+export const saveBeingEditedJob = async () => async (dispatch, getState) => {
+
+    const _validate = (name, repoUrl) => {
+        let messages = {};
+
+        if (!name || name.trim() === "") {
+            messages.invalidNameMessage = "Job name must not be null"
+        }
+
+        if (!repoUrl || repoUrl.trim() === "") {
+            messages.invalidRepoUrlMessage = "Repo URL must not be null";
+        } else if (!isGitUrl(repoUrl)) {
+            messages.invalidRepoUrlMessage = "Invalid git repo URL";
+        }
+
+        return messages;
+    };
+
+
+    const state = getState();
+    const data = getEditJobData(state);
+
+    const {_id, name, repoUrl, repoType, branch, credential, cdFilePath, description} = data;
+
+    const messages = _validate(name, repoUrl);
+
+    if (Object.keys(messages).length > 0) {
+        dispatch(updateEditJobModalData(messages));
+    } else {
+        dispatch(updateEditJobModalData({
+            loading: true
+        }));
+
+        const newJob = await dispatch(requestUpdateJob(_id, name, repoType, repoUrl, branch, credential, description, cdFilePath));
+
+        dispatch(updateEditJobModalData({
+            loading: false
+        }));
+
+        return newJob;
+    }
+};
+
 export const hideCreateJobModal = () => {
     return {
         type: HIDE_CREATE_JOB_MODAL
     }
 };
 
-export const requestCreateJob = async () => async (dispatch, getState) => {
-    const state = getState();
-    const {name} = getDataForJobNameComponent(state);
+export const requestCreateJob = async () => ({
+    func: async (dispatch, getState) => {
+        const state = getState();
+        const {name} = getDataForJobNameComponent(state);
 
-    dispatch({
-        type: CREATE_JOB_REQUEST,
-        name
-    });
+        dispatch({
+            type: CREATE_JOB_REQUEST,
+            name
+        });
 
-    try {
         const createdJob = await createJob(name);
 
         dispatch({
@@ -128,33 +159,25 @@ export const requestCreateJob = async () => async (dispatch, getState) => {
         });
 
         return createdJob;
+    },
 
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
+    errorType: CREATE_JOB_ERROR
+});
 
+export const requestUpdateJob = async (id, name, repoType, repoUrl, branch, credential, description, cdFilePath) => ({
+    func: async (dispatch) => {
         dispatch({
-            type: CREATE_JOB_ERROR,
-            error
+            type: UPDATE_JOB_REQUEST,
+            id,
+            name,
+            repoType,
+            repoUrl,
+            branch,
+            credential,
+            description,
+            cdFilePath
         });
-    }
 
-};
-
-export const requestUpdateJob = async (id, name, repoType, repoUrl, branch, credential, description, cdFilePath) => async (dispatch) => {
-    dispatch({
-        type: UPDATE_JOB_REQUEST,
-        id,
-        name,
-        repoType,
-        repoUrl,
-        branch,
-        credential,
-        description,
-        cdFilePath
-    });
-
-    try {
         const newJob = await updateJob(id, name, repoType, repoUrl, branch, credential, description, cdFilePath);
 
         dispatch({
@@ -163,24 +186,18 @@ export const requestUpdateJob = async (id, name, repoType, repoUrl, branch, cred
         });
 
         return newJob;
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
+    },
 
+    errorType: UPDATE_JOB_ERROR
+});
+
+export const requestDeleteJob = async (id) => ({
+    func: async (dispatch) => {
         dispatch({
-            type: UPDATE_JOB_ERROR,
-            error
+            type: DELETE_JOB_REQUEST,
+            id
         });
-    }
-};
 
-export const requestDeleteJob = async (id) => async (dispatch) => {
-    dispatch({
-        type: DELETE_JOB_REQUEST,
-        id
-    });
-
-    try {
         await deleteJob(id);
 
         dispatch({
@@ -189,27 +206,18 @@ export const requestDeleteJob = async (id) => async (dispatch) => {
         });
 
         return true;
+    },
 
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
+    errorType: DELETE_JOB_ERROR
+});
 
+export const requestPlayJob = async (id) => ({
+    func: async (dispatch) => {
         dispatch({
-            type: DELETE_JOB_ERROR,
-            error
+            type: PLAY_JOB_REQUEST,
+            id
         });
 
-        return false;
-    }
-};
-
-export const requestPlayJob = async (id) => async (dispatch) => {
-    dispatch({
-        type: PLAY_JOB_REQUEST,
-        id
-    });
-
-    try {
         const build = await play(id);
 
         dispatch({
@@ -219,24 +227,18 @@ export const requestPlayJob = async (id) => async (dispatch) => {
         });
 
         return build;
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
+    },
 
+    errorType: PLAY_JOB_ERROR
+});
+
+export const requestJobDetails = async (id, includeBuilds) => ({
+    func: async (dispatch) => {
         dispatch({
-            type: PLAY_JOB_ERROR,
-            error
+            type: GET_JOB_DETAILS_REQUEST,
+            id
         });
-    }
-};
 
-export const requestJobDetails = async (id, includeBuilds) => async (dispatch) => {
-    dispatch({
-        type: GET_JOB_DETAILS_REQUEST,
-        id
-    });
-
-    try {
         const job = await jobDetails(id, includeBuilds);
 
         dispatch({
@@ -245,13 +247,7 @@ export const requestJobDetails = async (id, includeBuilds) => async (dispatch) =
         });
 
         return job;
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
+    },
 
-        dispatch({
-            type: GET_JOB_DETAILS_ERROR,
-            error
-        });
-    }
-};
+    errorType: GET_JOB_DETAILS_ERROR
+});

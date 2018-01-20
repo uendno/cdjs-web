@@ -1,5 +1,6 @@
 .s-alert-box {
-  z-index: 9999; }
+  z-index: 9999;
+  background: transparent !important; }
   .s-alert-box .bs-alert {
     margin: 0;
     box-shadow: 4px 4px 26px rgba(136, 136, 136, 0.43); }

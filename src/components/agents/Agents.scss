@@ -1,0 +1,32 @@
+.agents-component {
+  .content {
+    padding-top: 16px;
+
+    .status {
+      &.online {
+        color: rgb(66, 183, 42);
+      }
+
+      &.offline {
+        color: #a7a7a7;
+      }
+
+      &.waiting-for-connection {
+
+      }
+    }
+
+    td {
+      vertical-align: middle;
+
+      .action-button {
+        margin-right: 8px;
+
+        &.red {
+          color: white;
+          background-color: #cd4449;
+        }
+      }
+    }
+  }
+}

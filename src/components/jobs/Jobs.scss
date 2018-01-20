@@ -13,6 +13,7 @@
       th, td {
         border: 1px !important;
         vertical-align: middle;
+        text-align: center;
       }
     }
 
@@ -32,6 +33,10 @@
 
     &.building {
       color: #337ab7;
+    }
+
+    &.success {
+      color: #5cb85c;
     }
   }
 

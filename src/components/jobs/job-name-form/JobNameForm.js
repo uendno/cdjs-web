@@ -5,7 +5,7 @@ import {FormGroup, FormControl, HelpBlock, ControlLabel} from 'react-bootstrap';
 import _ from 'lodash';
 import {getDataForJobNameComponent} from '../../../reducers';
 import './JobNameForm.css';
-import {checkJobName, updateBeingEditedJob, updateEditJobFormData} from '../../../actions/jobs';
+import {checkJobName, updateBeingEditedJob, updateEditJobModalData} from '../../../actions/jobs';
 
 
 const throttledCheckJobName = _.throttle((name, id, updateEditJobFormData, updateBeingEditedJob, checkJobName) => {
@@ -90,5 +90,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
     checkJobName,
     updateBeingEditedJob,
-    updateEditJobFormData
+    updateEditJobFormData: updateEditJobModalData
 })(JobNameFormComponent)

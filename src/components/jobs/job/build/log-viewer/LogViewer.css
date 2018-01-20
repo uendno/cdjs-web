@@ -1,0 +1,32 @@
+.logs-wrapper {
+  background-color: #282c30;
+  padding: 20px 32px;
+  width: 100%; }
+  .logs-wrapper .line {
+    color: #d9d9d9;
+    font-size: 12px;
+    font-family: 'Roboto Mono', monospace;
+    white-space: pre-wrap;
+    display: flex;
+    flex-direction: row; }
+    .logs-wrapper .line .left {
+      width: 260px;
+      border-right: 1px dashed #9b9b9b; }
+      .logs-wrapper .line .left .timestamp {
+        color: #786a7c; }
+      .logs-wrapper .line .left .level {
+        margin-left: 8px; }
+        .logs-wrapper .line .left .level.info {
+          color: #ffec5c; }
+        .logs-wrapper .line .left .level.error {
+          color: #ff5f5f; }
+    .logs-wrapper .line .message {
+      padding-left: 20px;
+      flex: 1;
+      text-indent: -8px; }
+      .logs-wrapper .line .message.error {
+        color: #ff5f5f; }
+      .logs-wrapper .line .message.system {
+        color: #ffec5c; }
+      .logs-wrapper .line .message.runner {
+        color: #5cb85c; }

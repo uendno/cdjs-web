@@ -24,15 +24,14 @@ import {
     createCredential as createCredentialQL,
     deleteCredential as deleteCredentialQL,
     updateCredential as updateCredentialQL,
-} from '../helpers/api';
-import {showError} from '../helpers/alert';
+} from '../helpers/graphql';
 
-export const requestAllCredentials = async () => async (dispatch) =>    {
-    dispatch({
-        type: GET_ALL_CREDENTIALS_REQUEST
-    });
+export const requestAllCredentials = async () => ({
+    func: async (dispatch) => {
+        dispatch({
+            type: GET_ALL_CREDENTIALS_REQUEST
+        });
 
-    try {
         const credentials = await getAllCredentialsQL();
 
         dispatch({
@@ -41,17 +40,10 @@ export const requestAllCredentials = async () => async (dispatch) =>    {
         });
 
         return credentials;
+    },
 
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
-
-        dispatch({
-            type: GET_ALL_CREDENTIALS_ERROR,
-            error
-        });
-    }
-};
+    errorType: GET_ALL_CREDENTIALS_ERROR
+});
 
 export const openCreateCredentialModal = (mode, credential) => {
     return {
@@ -74,14 +66,14 @@ export const updateBeingEditedCredential = (data) => {
     }
 };
 
-export const checkCredentialName = async (name, currentCredentialId) => async (dispatch) => {
-    dispatch({
-        type: CHECK_CREDENTIAL_NAME_REQUEST,
-        name,
-        currentCredentialId
-    });
+export const checkCredentialName = async (name, currentCredentialId) => ({
+    func: async (dispatch) => {
+        dispatch({
+            type: CHECK_CREDENTIAL_NAME_REQUEST,
+            name,
+            currentCredentialId
+        });
 
-    try {
         const result = await checkCredentialNameQL(name, currentCredentialId);
 
         dispatch({
@@ -90,26 +82,19 @@ export const checkCredentialName = async (name, currentCredentialId) => async (d
         });
 
         return result;
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
+    },
 
+    errorType: CHECK_CREDENTIAL_NAME_ERROR
+});
+
+export const requestCreateCredential = async (name, type, data) => ({
+    func: async (dispatch) => {
         dispatch({
-            type: CHECK_CREDENTIAL_NAME_ERROR,
-            error
+            type: CREATE_CREDENTIAL_REQUEST,
+            credentialType: type,
+            name,
+            data
         });
-    }
-};
-
-export const requestCreateCredential = async (name, type, data) => async (dispatch) => {
-    dispatch({
-        type: CREATE_CREDENTIAL_REQUEST,
-        credentialType: type,
-        name,
-        data
-    });
-
-    try {
 
         let credential;
 
@@ -121,25 +106,19 @@ export const requestCreateCredential = async (name, type, data) => async (dispat
         });
 
         return credential;
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
+    },
 
+    errorType: CREATE_CREDENTIAL_ERROR
+});
+
+export const requestUpdateCredential = async (id, updateData) => ({
+    func: async (dispatch) => {
         dispatch({
-            type: CREATE_CREDENTIAL_ERROR,
-            error
+            type: UPDATE_CREDENTIAL_REQUEST,
+            id,
+            updateData
         });
-    }
-};
 
-export const requestUpdateCredential = async (id, updateData) => async (dispatch) => {
-    dispatch({
-        type: UPDATE_CREDENTIAL_REQUEST,
-        id,
-        updateData
-    });
-
-    try {
         const credential = await updateCredentialQL(id, updateData);
 
         dispatch({
@@ -149,37 +128,25 @@ export const requestUpdateCredential = async (id, updateData) => async (dispatch
         });
 
         return credential;
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
+    },
 
+    errorType: UPDATE_CREDENTIAL_ERROR
+});
+
+export const deleteCredential = async (id) => ({
+    func: async (dispatch) => {
         dispatch({
-            type: UPDATE_CREDENTIAL_ERROR,
-            error
+            type: DELETE_CREDENTIAL_REQUEST,
+            id
         });
-    }
-};
 
-export const deleteCredential = async (id) => async (dispatch) => {
-    dispatch({
-        type: DELETE_CREDENTIAL_REQUEST,
-        id
-    });
-
-    try {
         await deleteCredentialQL(id);
 
         dispatch({
             type: DELETE_CREDENTIAL_COMPLETE,
             id
         })
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
+    },
 
-        dispatch({
-            type: DELETE_CREDENTIAL_ERROR,
-            error
-        });
-    }
-};
+    errorType: DELETE_CREDENTIAL_ERROR
+});

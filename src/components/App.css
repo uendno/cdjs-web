@@ -1,47 +1,40 @@
 .app-component {
-  display: flex;
-  flex-direction: row;
-  height: 100%; }
-  .app-component .nav-component-container {
-    height: 100%; }
-  .app-component .page-header {
-    background-color: white;
-    margin: 0;
-    padding: 0;
-    height: 60px;
-    display: flex;
-    justify-content: flex-start;
-    border-bottom: solid 1px #ddd;
-    align-items: center; }
-    .app-component .page-header .header-info {
-      flex: 1;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex-direction: row; }
-      .app-component .page-header .header-info .page-title {
-        font-size: 18px;
-        margin-left: 30px; }
-      .app-component .page-header .header-info .back-button {
-        margin-left: 20px; }
-    .app-component .page-header .action-buttons .action-button {
-      margin-right: 16px; }
-  .app-component .row {
-    margin: 0; }
-  .app-component .main-content {
-    flex: 1;
-    background-color: #f4f4f4;
-    height: 100vh;
-    overflow-y: auto; }
-
-.s-alert-box {
-  z-index: 1001;
-  background: none;
-  padding: 0; }
-
-.button-with-icon i {
-  margin-right: 8px;
-  font-size: 16px; }
-
-.button-with-icon.no-text i {
-  margin-right: 0; }
+  height: 100vh; }
+  .app-component .routes {
+    height: 100vh; }
+    .app-component .routes .nav-component-container {
+      height: 100vh;
+      float: left; }
+    .app-component .routes .main-content {
+      background-color: #f4f4f4;
+      height: 100vh;
+      overflow-y: auto; }
+      .app-component .routes .main-content .page-header {
+        background-color: white;
+        margin: 0;
+        padding: 0;
+        height: 60px;
+        display: flex;
+        justify-content: flex-start;
+        border-bottom: solid 1px #ddd;
+        align-items: center; }
+        .app-component .routes .main-content .page-header .header-info {
+          flex: 1;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          flex-direction: row; }
+          .app-component .routes .main-content .page-header .header-info .page-title {
+            font-size: 18px;
+            margin-left: 30px; }
+          .app-component .routes .main-content .page-header .header-info .back-button {
+            margin-left: 20px; }
+        .app-component .routes .main-content .page-header .action-buttons .action-button {
+          margin-right: 16px; }
+      .app-component .routes .main-content .row {
+        margin: 0; }
+      .app-component .routes .main-content .button-with-icon i {
+        margin-right: 8px;
+        font-size: 16px; }
+      .app-component .routes .main-content .button-with-icon.no-text i {
+        margin-right: 0; }

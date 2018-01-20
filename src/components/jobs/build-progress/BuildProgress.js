@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {ProgressBar} from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import './BuildProgress.css';
 
 class BuildProgressComponent extends Component {
@@ -28,9 +29,21 @@ class BuildProgressComponent extends Component {
             case 'building':
                 return (
                     <div className="build-progress-component">
-                        <ProgressBar active now={45}/>
+                        <ProgressBar active now={this._getPercentage(build.stages)}/>
+                        <p className="description"> {includeDescription && `Current stage: ${this._getCurrentStageName(build.stages)}`}</p>
                     </div>
                 );
+
+            case 'success':
+                return (
+                    <div className="build-progress-component">
+                        <ProgressBar className="build-progress" bsStyle="success" label="Passed"
+                                     now={100}/>
+                        {includeDescription && <p className="description">
+                            Duration: {moment.duration(moment(build.doneAt).diff(moment(build.startAt))).format("h[h] m[m] s[s]")}</p>}
+                    </div>
+                );
+
             case 'failed':
 
                 let failedStage;
@@ -38,7 +51,8 @@ class BuildProgressComponent extends Component {
                 if (build.stages.length === 0) {
                     failedStage = 'prepare';
                 } else {
-                    failedStage = build.stages[build.stages.length - 1];
+                    const found = build.stages.find(s => s.status === 'failed');
+                    failedStage = found && found.name;
                 }
 
                 return (
@@ -51,6 +65,16 @@ class BuildProgressComponent extends Component {
             default:
                 return null;
         }
+    }
+
+    _getPercentage(stages) {
+        const nSuccess = stages.filter(s => s.status === 'success').length;
+        return Math.round((nSuccess + 1) / stages.length * 100)
+    }
+
+    _getCurrentStageName(stages) {
+        const found = stages.find(s => s.status === 'building');
+        return found && found.name;
     }
 }
 

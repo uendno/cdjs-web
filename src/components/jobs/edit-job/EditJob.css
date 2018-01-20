@@ -9,55 +9,6 @@
     .new-job-component .content .middle {
       width: 800px;
       margin: auto; }
-      .new-job-component .content .middle .section {
-        margin-bottom: 10px; }
-        .new-job-component .content .middle .section #job-description-input {
-          resize: vertical; }
-        .new-job-component .content .middle .section .default-value {
-          font-weight: normal;
-          color: #6e6e6e; }
-        .new-job-component .content .middle .section .note {
-          margin-top: 16px;
-          font-size: 14px;
-          font-style: italic;
-          color: #6e6e6e; }
-        .new-job-component .content .middle .section .repo-type-button {
-          margin-right: 16px; }
-          .new-job-component .content .middle .section .repo-type-button.selected {
-            background-color: #ccc;
-            border-color: #808080; }
-        .new-job-component .content .middle .section .webhook-url {
-          width: 100%;
-          background-color: #f7f8fa;
-          height: 34px;
-          font-size: 14px;
-          line-height: 1.42857143;
-          color: #555;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          position: relative;
-          text-overflow: ellipsis;
-          word-break: break-all;
-          white-space: nowrap;
-          overflow: hidden;
-          padding: 6px 50px 6px 12px; }
-          .new-job-component .content .middle .section .webhook-url .copy-button {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 34px;
-            border: none;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-            border-left: solid 1px #ddd; }
-        .new-job-component .content .middle .section .create-job-button {
-          margin: 15px; }
-        .new-job-component .content .middle .section .credential-content {
-          min-width: 300px;
-          margin-bottom: 0; }
-          .new-job-component .content .middle .section .credential-content .credential-data {
-            float: right; }
-        .new-job-component .content .middle .section .add-credential-button i {
-          font-size: 16px;
-          margin-right: 8px; }
+      .new-job-component .content .middle .danger-text {
+        color: #cd4449 !important;
+        font-weight: bold !important; }

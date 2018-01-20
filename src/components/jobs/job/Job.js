@@ -4,10 +4,12 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
 import Proptypes from 'prop-types';
+import moment from 'moment';
 import './Job.css';
 import {getJob, getBuildsForJob} from '../../../reducers';
 import {requestJobDetails, requestPlayJob} from '../../../actions/jobs';
 import BuildProgressComponent from '../build-progress/BuildProgress';
+import CommitInfoComponent from '../commit-info/CommitInfo';
 
 class JobComponent extends Component {
     componentDidMount() {
@@ -29,7 +31,7 @@ class JobComponent extends Component {
                         ><i className="fa fa-arrow-left" aria-hidden="true"/></Button>
                         <span className="page-title">{job.name}</span>
                     </div>
-                    <div className="action-buttons">
+                        <div className="action-buttons">
                         <Button className="button-with-icon play-job-button action-button"
                                 onClick={() => requestPlayJob(job._id)}
                                 disabled={job.status !== 'active'}
@@ -55,14 +57,15 @@ class JobComponent extends Component {
         history.goBack();
     }
 
-    _renderBuild(job, build, index) {
+    _renderBuild(job, build) {
         return (
-            <Row key={index}>
+            <Row key={build._id}>
                 <Col md={1}>
                     <Link to={`/jobs/${job._id}/builds/${build._id}`}>#{build.number}</Link>
                 </Col>
                 <Col md={3}>
-                    {this._renderCommitInfo(build)}
+                    <CommitInfoComponent build={build}/>
+                    {build && moment(build.startAt).calendar()}
                 </Col>
                 <Col md={5}>
                     <BuildProgressComponent build={build} includeDescription={true}/>
@@ -72,19 +75,6 @@ class JobComponent extends Component {
                 </Col>
             </Row>
         )
-    }
-
-    _renderCommitInfo(build) {
-
-        if (build.commits && build.commits.length > 0) {
-            return (<p>
-                {build.commits[0].message}
-            </p>)
-        } else {
-            return (<p>
-                Triggered manually
-            </p>)
-        }
     }
 
 

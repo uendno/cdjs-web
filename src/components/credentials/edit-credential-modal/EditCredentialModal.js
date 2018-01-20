@@ -16,7 +16,7 @@ import {
     Col
 } from 'react-bootstrap';
 import './EditCredentialModal.css';
-import {getEditCredentialModalData} from '../../reducers';
+import {getEditCredentialModalData} from '../../../reducers';
 import {
     closeCreateCredentialModal,
     checkCredentialName,
@@ -24,7 +24,7 @@ import {
     requestAllCredentials,
     updateBeingEditedCredential,
     requestUpdateCredential
-} from '../../actions/credentials';
+} from '../../../actions/credentials';
 
 const _checkIfCredentialExists = _.throttle(async (name, currentCredentialId, checkCredentialName, onDone) => {
         const result = await checkCredentialName(name, currentCredentialId);

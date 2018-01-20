@@ -7,31 +7,72 @@ import './App.css';
 import JobsComponent from './jobs/Jobs';
 import JobComponent from './jobs/job/Job';
 import NavComponent from './nav/Nav';
-import AlertComponent from './alert/Alert';
+import AlertComponent from './modals/alert/Alert';
 import EditJobComponent from './jobs/edit-job/EditJob';
-import CreateCredentialModal from './edit-credential-modal/EditCredentialModal';
+import EditCredentialModal from './credentials/edit-credential-modal/EditCredentialModal';
 import CredentialsComponent from './credentials/Credentials';
 import BuildComponent from './jobs/job/build/Build';
 import NotFoundComponent from './not-found/NotFound';
+import LoginComponent from './login/Login';
+import AgentsComponent from './agents/Agents';
+import NewAgentModal from './agents/new-agent-modal/NewAgentModal';
+import EditAgentModal from './agents/edit-agent-modal/EditAgentModal';
+// import {showError} from '../helpers/alert';
+
+
+const PrivateRoute = ({component: Component, ...rest}) => (
+    <Route {...rest} render={props => {
+        const accessToken = localStorage.getItem('accessToken');
+
+        return (
+            accessToken ? (
+                <Component {...props}/>
+            ) : (
+                <Redirect to={{
+                    pathname: '/login',
+                    state: {from: props.location}
+                }}/>
+            )
+        )
+    }}/>
+);
 
 class App extends Component {
+
+    // componentDidMount() {
+    //     showError('Opps','asdasdaj andskasd asd');
+    // }
+
+
     render() {
         return (
             <div className="app-component">
                 <Alert stack={true} contentTemplate={AlertComponent}/>
-                <CreateCredentialModal/>
-                <div className="nav-component-container">
-                    <NavComponent/>
-                </div>
-                <div className="main-content">
+                <div className='routes'>
                     <Switch>
-                        <Route exact path="/" render={() => <Redirect to="/jobs"/>}/>
-                        <Route path="/jobs/:id/builds/:buildId" component={BuildComponent}/>
-                        <Route path="/jobs/:id/edit" component={EditJobComponent}/>
-                        <Route path="/jobs/:id" component={JobComponent}/>
-                        <Route exact path="/jobs" component={JobsComponent}/>
-                        <Route exect path="/credentials" component={CredentialsComponent}/>
-                        <Route component={NotFoundComponent}/>
+                        <Route exect path="/login" component={LoginComponent}/>
+                        <PrivateRoute component={() => (
+                            <div>
+                                <EditCredentialModal/>
+                                <div className="nav-component-container">
+                                    <NavComponent/>
+                                    <NewAgentModal/>
+                                    <EditAgentModal/>
+                                </div>
+                                <div className="main-content">
+                                    <Switch>
+                                        <Route exact path="/" render={() => <Redirect to="/jobs"/>}/>
+                                        <Route path="/jobs/:id/builds/:buildId" component={BuildComponent}/>
+                                        <Route path="/jobs/:id/edit" component={EditJobComponent}/>
+                                        <Route path="/jobs/:id" component={JobComponent}/>
+                                        <Route exact path="/jobs" component={JobsComponent}/>
+                                        <Route exact path="/credentials" component={CredentialsComponent}/>
+                                        <Route exact path="/agents" component={AgentsComponent}/>
+                                        <Route component={NotFoundComponent}/>
+                                    </Switch>
+                                </div>
+                            </div>
+                        )}/>
                     </Switch>
                 </div>
             </div>

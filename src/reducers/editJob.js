@@ -8,12 +8,12 @@ import {
     EDIT_JOB_CLOSE,
     SHOW_CREATE_JOB_MODAL,
     HIDE_CREATE_JOB_MODAL,
-    UPDATE_EDIT_JOB_FORM_DATA
+    UPDATE_EDIT_JOB_MODAL_DATA
 } from '../actions/types';
 
 const initialState = {
     _id: null,
-    editForm: {
+    modal: {
         invalidNameMessage: "",
         invalidRepoUrlMessage: "",
         loading: false,
@@ -56,11 +56,11 @@ export default (state = initialState, action) => {
             }
         }
 
-        case UPDATE_EDIT_JOB_FORM_DATA: {
+        case UPDATE_EDIT_JOB_MODAL_DATA: {
             return {
                 ...state,
-                editForm: {
-                    ...state.editForm,
+                modal: {
+                    ...state.modal,
                     ...action.data
                 }
             }
@@ -69,8 +69,8 @@ export default (state = initialState, action) => {
         case SHOW_CREATE_JOB_MODAL: {
             return {
                 ...initialState,
-                editForm: {
-                    ...state.editForm,
+                modal: {
+                    ...state.modal,
                     showCreateJobModal: true
                 }
             }
@@ -88,18 +88,30 @@ export default (state = initialState, action) => {
     }
 }
 
-export const getDataForJobNameForm = ({editForm, name, _id}) => {
+export const getModalData = (state) => {
+    return state.modal;
+};
+
+export const getDataForJobNameForm = ({modal, name, _id}) => {
     return {
-        invalidNameMessage: editForm.invalidNameMessage,
+        invalidNameMessage: modal.invalidNameMessage,
         name,
         _id
     }
 };
 
-export const checkIfShouldShowCreateJobModal = ({editForm}) => {
-    return editForm.showCreateJobModal;
+export const checkIfShouldShowCreateJobModal = ({modal}) => {
+    return modal.showCreateJobModal;
 };
 
-export const checkIfNewJobAbleToBeCreated = ({editForm}) => {
-    return !editForm.loading && editForm.invalidNameMessage === "" && editForm.invalidRepoUrlMessage === "";
+export const checkIfNewJobAbleToBeCreated = ({modal}) => {
+    return !modal.loading && modal.invalidNameMessage === "" && modal.invalidRepoUrlMessage === "";
+};
+
+export const getBeingEditedJobName = (state) => {
+    return state.name
+};
+
+export const getBeingEditedJobId = (state) => {
+    return state._id
 };

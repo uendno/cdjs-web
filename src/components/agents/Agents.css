@@ -1,0 +1,13 @@
+.agents-component .content {
+  padding-top: 16px; }
+  .agents-component .content .status.online {
+    color: #42b72a; }
+  .agents-component .content .status.offline {
+    color: #a7a7a7; }
+  .agents-component .content td {
+    vertical-align: middle; }
+    .agents-component .content td .action-button {
+      margin-right: 8px; }
+      .agents-component .content td .action-button.red {
+        color: white;
+        background-color: #cd4449; }

@@ -1,0 +1,9 @@
+.build-progress-component {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around; }
+  .build-progress-component .progress {
+    width: 100%;
+    margin: 0; }
+  .build-progress-component .description {
+    margin-top: 16px; }

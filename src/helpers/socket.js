@@ -1,12 +1,15 @@
 import io from 'socket.io-client';
 import config from '../config';
-import {UPDATE_JOB_BUILD_DATA, RECEIVE_LOG} from '../actions/types';
+import {editAgentImmediately} from '../actions/agents';
+import {UPDATE_JOB_BUILD_DATA, RECEIVE_LOG, CREATE_BUILD} from '../actions/types';
 import {getCurrentBuildIdThatBeingReadLogs} from '../reducers';
 
 const BUILD_STATUS = 'BUILD_STATUS';
 const LOG_DATA = 'LOG_DATA';
 const READ_LOG = 'READ_LOG';
 const CANCEL_READ_LOG = 'CANCEL_READ_LOG';
+const NEW_BUILD = 'NEW_BUILD';
+const AGENT_STATUS = 'AGENT_STATUS';
 
 let socket;
 
@@ -26,6 +29,14 @@ export const createWS = (dispatch, getState) => {
         })
     });
 
+    socket.on(NEW_BUILD, (data) => {
+        dispatch({
+            type: CREATE_BUILD,
+            jobId: data.jobId,
+            build: data.build
+        })
+    });
+
     socket.on(LOG_DATA, data => {
 
         const state = getState();
@@ -37,6 +48,12 @@ export const createWS = (dispatch, getState) => {
                 logs: data.data
             })
         }
+    });
+
+    socket.on(AGENT_STATUS, agent => {
+        dispatch(editAgentImmediately(agent._id, {
+            ...agent
+        }))
     })
 };
 

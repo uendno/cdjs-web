@@ -1,0 +1,25 @@
+.login-component {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #40455E; }
+  .login-component .login-form {
+    background-color: white;
+    width: 400px;
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 1px 1px 10px 5px rgba(0, 0, 0, 0.26); }
+    .login-component .login-form .logo {
+      height: 80px;
+      width: 80px;
+      object-fit: contain;
+      display: block;
+      margin: auto auto 32px; }
+    .login-component .login-form .login-button {
+      display: block;
+      width: 300px;
+      margin: 32px auto 16px; }
+    .login-component .login-form .form-group {
+      width: 300px;
+      margin: 16px auto auto; }

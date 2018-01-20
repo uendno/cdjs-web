@@ -5,17 +5,16 @@ import {
     READ_LOG,
     CANCEL_READ_LOG
 } from './types';
-import {buildDetails} from '../helpers/api';
-import {showError} from '../helpers/alert';
+import {buildDetails} from '../helpers/graphql';
 import * as socketHelper from '../helpers/socket';
 
-export const getBuildDetails = async (id, jobId) => async (dispatch) => {
-    dispatch({
-        type: GET_BUILD_DETAILS_REQUEST,
-        id
-    });
+export const getBuildDetails = async (id, jobId) => ({
+    func: async (dispatch) => {
+        dispatch({
+            type: GET_BUILD_DETAILS_REQUEST,
+            id
+        });
 
-    try {
         const build = await buildDetails(id);
 
         dispatch({
@@ -25,17 +24,10 @@ export const getBuildDetails = async (id, jobId) => async (dispatch) => {
         });
 
         return build;
+    },
 
-    } catch (error) {
-        console.error(error.stack);
-        showError("Oops!", error.message);
-
-        dispatch({
-            type: GET_BUILD_DETAILS_ERROR,
-            error
-        });
-    }
-};
+    errorType: GET_BUILD_DETAILS_ERROR
+});
 
 export const readLogs = (buildId) => {
 

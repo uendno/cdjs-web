@@ -1,15 +1,16 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom';
-import {Row, Table, Button, Col, ProgressBar, Panel} from 'react-bootstrap';
+import {Row, Table, Button, Col, Panel} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import moment from 'moment';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import './Jobs.css';
 import {requestAllJobs, requestPlayJob, showCreateJobModal} from '../../actions/jobs';
 import {getAllJobs} from '../../reducers';
 import CreateJobModalComponent from './create-job-modal/CreateJobModal';
 import BuildProgressComponent from './build-progress/BuildProgress';
+import CommitInfoComponent from './commit-info/CommitInfo';
 
 
 class HomeComponent extends Component {
@@ -62,25 +63,28 @@ class HomeComponent extends Component {
         )
     }
 
-    _renderJob(job, index) {
+    _renderJob(job) {
         const lastBuild = job.lastBuild;
         const status = (lastBuild && lastBuild.status) || 'created';
 
         return (
-            <tr key={index}>
-                <td>
+            <tr key={job._id}>
+                <td className="col-md-1">
                     {this._renderStatus(status)}
                 </td>
-                <td>
+                <td className="col-md-1">
                     <Link to={`/jobs/${job._id}`}>
                         {job.name}
                     </Link>
                 </td>
-                <td>{this._renderCommitInfo(lastBuild)}</td>
-                <td className="build-progress-cell">
+                <td className="col-md-3">
+                    <CommitInfoComponent build={job.lastBuild}/>
+                    {lastBuild && moment(lastBuild.startAt).calendar()}
+                    </td>
+                <td className="build-progress-cell col-md-3">
                     <BuildProgressComponent build={lastBuild || {}} includeDescription={true}/>
                 </td>
-                <td>
+                <td className="col-md-2">
                     {this._renderActions(job)}
                 </td>
             </tr>
@@ -105,22 +109,6 @@ class HomeComponent extends Component {
         )
     }
 
-    _renderCommitInfo(lastBuild) {
-        if (lastBuild) {
-            if (lastBuild.commits && lastBuild.commits.length > 0) {
-                return (<p>
-                    {lastBuild.commits[0].message}
-                </p>)
-            } else {
-                return (<p>
-                    Triggered manually
-                </p>)
-            }
-        } else {
-            return null;
-        }
-    }
-
     _renderStatus(status) {
         switch (status) {
             case 'failed':
@@ -130,42 +118,13 @@ class HomeComponent extends Component {
             case 'preparing':
             case 'building':
                 return <i className="fa fa-circle-o-notch fa-spin status-icon building" aria-hidden="true"/>;
+            case 'success':
+                return <i className="fa fa-check status-icon success" aria-hidden="true"/>;
             default:
                 return null;
 
         }
     }
-
-    // _renderLastBuild(lastBuild) {
-    //     if (lastBuild) {
-    //         switch (lastBuild.status) {
-    //             case 'pending':
-    //                 return <ProgressBar bsStyle="warning" now={0} label="Pending..."/>;
-    //             case 'preparing':
-    //                 return <ProgressBar className="build-progress" bsStyle="warning" active label="Preparing..."
-    //                                     now={100}/>;
-    //             case 'building': {
-    //                 const pendings = lastBuild.stages.filter(s => s.status === 'pending');
-    //                 const rate = 1 - pendings.length / lastBuild.stages.length;
-    //                 return <ProgressBar className="build-progress" active now={rate * 100}/>
-    //             }
-    //
-    //             default:
-    //                 return (
-    //                     <p>
-    //                         {moment(lastBuild.startAt).calendar()}
-    //                         <br/>
-    //                         duration:
-    //                         <b>{moment.duration(moment(lastBuild.doneAt).diff(moment(lastBuild.startAt))).format("h[h] m[m] s[s]")}</b>
-    //                     </p>
-    //                 )
-    //
-    //         }
-    //     }
-    //     else {
-    //         return null;
-    //     }
-    // }
 }
 
 HomeComponent.propTypes = {

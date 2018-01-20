@@ -3,7 +3,9 @@ import {
     GET_JOB_DETAILS_COMPLETE,
     GET_BUILD_DETAILS_COMPLETE,
     UPDATE_JOB_BUILD_DATA,
-    PLAY_JOB_COMPLETE
+    DELETE_JOB_COMPLETE,
+    CREATE_BUILD,
+
 } from '../actions/types';
 
 
@@ -81,7 +83,7 @@ const builds = (state = initialState, action) => {
             }
         }
 
-        case PLAY_JOB_COMPLETE:
+        case CREATE_BUILD:
         case UPDATE_JOB_BUILD_DATA: {
             addOrUpdateBuildIfNeeded(action.build, action.jobId, true);
 
@@ -89,6 +91,30 @@ const builds = (state = initialState, action) => {
                 ...state,
                 byId,
                 ids
+            }
+        }
+
+        case DELETE_JOB_COMPLETE: {
+            const jobId = action.id;
+
+            const byId = {...state.byId};
+            let ids = [...state.ids];
+
+            ids.filter(id => {
+                const build = byId[id];
+
+                if (build.jobId === jobId) {
+                    byId[id] = null;
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+
+            return {
+                ...state,
+                ids,
+                byId
             }
         }
 

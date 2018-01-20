@@ -2,8 +2,6 @@
   background-color: #282c30;
   padding: 20px 32px;
   width: 100%;
-  height: 500px;
-  overflow-y: scroll;
 
   .line {
     color: #d9d9d9;
@@ -35,8 +33,18 @@
     .message {
       padding-left: 20px;
       flex: 1;
+      text-indent: -8px;
+
       &.error {
         color: #ff5f5f;
+      }
+
+      &.system {
+        color: #ffec5c;
+      }
+
+      &.runner {
+        color: #5cb85c;
       }
     }
   }

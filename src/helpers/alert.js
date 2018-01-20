@@ -4,7 +4,7 @@ export const showError = (title = 'Oops!', message) => {
     Alert.error(message, {
         position: 'bottom-right',
         effect: 'slide',
-        timeout: 'none',
+        timeout: 10000000,
         customFields: {
             title
         }
