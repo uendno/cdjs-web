@@ -14,7 +14,7 @@ const wrappedThunk = ({dispatch, getState}) => next => async action => {
 
             showError("Oops!", error.response ? error.response.message : error.message);
 
-            if (error.response && error.response.status === 401) {
+            if (error.response && error.statusCode === 401) {
                 localStorage.removeItem('accessToken');
                 window.location.href = '/login';
             }

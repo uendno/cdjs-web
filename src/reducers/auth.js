@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
 import {LOGIN_COMPLETE} from '../actions/types'
+import localStorageSrv from '../services/localStorage';
 
 const initialState = {
-    accessToken: localStorage.getItem('accessToken'),
+    accessToken: localStorageSrv.get('accessToken'),
 };
 
 if (initialState.accessToken) {

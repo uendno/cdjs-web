@@ -67,7 +67,11 @@ class CredentialsComponent extends Component {
                             onClick={() => openCreateCredentialModal('edit', credential)}
                     ><i className="fa fa-pencil" aria-hidden="true"/></Button>
                     <Button className="action-button red"
-                            onClick={() => deleteCredential(credential._id)}
+                            onClick={() => {
+                                if (window.confirm('Are you sure want to delete this credential?')) {
+                                    deleteCredential(credential._id)
+                                }
+                            }}
                     ><i className="fa fa-trash-o" aria-hidden="true"/></Button>
                 </td>
             </tr>

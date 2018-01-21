@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
     OPEN_ADD_AGENT_MODAL, CLOSE_ADD_AGENT_MODAL, UPDATE_BEING_EDITED_AGENT,
     ADD_AGENT_COMPLETE, ADD_AGENT_REQUEST, ADD_AGENT_ERROR,
@@ -9,9 +10,9 @@ import {
     DELETE_AGENT_COMPLETE, DELETE_AGENT_ERROR, DELETE_AGENT_REQUEST,
     EDIT_AGENT_IMMEDIATELY
 } from './types';
-import * as graphqlHelper from '../helpers/graphql';
 import {getEditAgentData, getAgentById} from '../reducers';
-import _ from 'lodash';
+import * as agentsApi from '../api/agents';
+
 
 export const openAddAgentModal = () => {
     return {
@@ -68,7 +69,9 @@ export const addAgent = async () => ({
         });
 
 
-        const res = await graphqlHelper.addAgent(name);
+        const res = await agentsApi.addAgent({
+            name
+        });
         const token = res.token;
         const agent = _.omit(res, 'token');
 
@@ -88,7 +91,7 @@ export const requestAllAgents = async () => ({
             type: GET_ALL_AGENTS_REQUEST
         });
 
-        const agents = await graphqlHelper.allAgents();
+        const agents = await agentsApi.getAllAgents();
 
         dispatch({
             type: GET_ALL_AGENTS_COMPLETE,
@@ -112,7 +115,7 @@ export const updateEnabledPropertyForAgent = async (id, value) => ({
             data
         });
 
-        const agent = await graphqlHelper.updateAgent(id, data);
+        const agent = await agentsApi.updateAgent(id, data);
 
         dispatch({
             type: UPDATE_AGENT_COMPLETE,
@@ -139,7 +142,8 @@ export const updateAgent = async () => ({
         const data = {
             name: beingEdited.name,
             enabled: beingEdited.enabled,
-            numberOfConcurrentBuilds: beingEdited.numberOfConcurrentBuilds
+            numberOfConcurrentBuilds: beingEdited.numberOfConcurrentBuilds,
+            tags: beingEdited.tags,
         };
 
         dispatch({
@@ -148,7 +152,7 @@ export const updateAgent = async () => ({
             data
         });
 
-        const agent = await graphqlHelper.updateAgent(beingEdited._id, data);
+        const agent = await agentsApi.updateAgent(beingEdited._id, data);
 
         dispatch({
             type: UPDATE_AGENT_COMPLETE,
@@ -166,7 +170,7 @@ export const checkAgentName = (name, agentId) => ({
             name
         });
 
-        const result = await graphqlHelper.checkAgentName(name, agentId);
+        const result = await agentsApi.validateName(agentId, name);
 
         dispatch({
             type: CHECK_AGENT_NAME_COMPLETE,
@@ -186,7 +190,7 @@ export const deleteAgent = (id) => ({
             id
         });
 
-        await graphqlHelper.deleteAgent(id);
+        await agentsApi.deleteAgent(id);
 
         dispatch({
             type: DELETE_AGENT_COMPLETE,

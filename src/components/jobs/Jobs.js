@@ -6,7 +6,8 @@ import {withRouter} from 'react-router';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import './Jobs.css';
-import {requestAllJobs, requestPlayJob, showCreateJobModal} from '../../actions/jobs';
+import {requestAllJobs, showCreateJobModal} from '../../actions/jobs';
+import {requestCreateBuild} from "../../actions/builds";
 import {getAllJobs} from '../../reducers';
 import CreateJobModalComponent from './create-job-modal/CreateJobModal';
 import BuildProgressComponent from './build-progress/BuildProgress';
@@ -92,12 +93,12 @@ class HomeComponent extends Component {
     }
 
     _renderActions(job) {
-        const {requestPlayJob, history} = this.props;
+        const {requestCreateBuild, history} = this.props;
 
         return (
             <div className="actions">
                 <Button className="action-button"
-                        onClick={() => requestPlayJob(job._id)}
+                        onClick={() => requestCreateBuild(job._id)}
                         disabled={job.status !== 'active'}
                 ><i className="fa fa-play" aria-hidden="true"/></Button>
                 <Button className="action-button"
@@ -130,7 +131,7 @@ class HomeComponent extends Component {
 HomeComponent.propTypes = {
     requestAllJobs: PropTypes.func.isRequired,
     jobs: PropTypes.array.isRequired,
-    requestPlayJob: PropTypes.func.isRequired,
+    requestCreateBuild: PropTypes.func.isRequired,
     showCreateJobModal: PropTypes.func.isRequired
 };
 
@@ -140,6 +141,6 @@ const mapStateToProps = (state) => ({
 
 export default withRouter(connect(mapStateToProps, {
     requestAllJobs,
-    requestPlayJob,
+    requestCreateBuild,
     showCreateJobModal
 })(HomeComponent));

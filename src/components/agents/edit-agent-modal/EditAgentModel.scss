@@ -1,5 +1,42 @@
 .edit-agent-modal-component {
-  #agent-concurrent-builds-input {
-    max-width: 100px;
+
+  .content {
+
+    padding: 8px 16px;
+
+    #agent-concurrent-builds-input {
+      max-width: 100px;
+    }
+
+    .tag-delete-button {
+      color: white;
+      margin-left: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .badge {
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .tag {
+      font-size: 14px;
+      padding: 5px 9px;
+    }
+
+    .ReactTags__tagInput {
+      display: inline;
+
+      .tag-input {
+        margin-bottom: 8px;
+        position: relative;
+        bottom: 3px;
+        display: inline-block;
+        width: 150px;
+      }
+    }
   }
+
+
 }

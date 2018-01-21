@@ -11,9 +11,6 @@ import {
     CHECK_JOB_NAME_REQUEST,
     CHECK_JOB_NAME_COMPLETE,
     CHECK_JOB_NAME_ERROR,
-    PLAY_JOB_REQUEST,
-    PLAY_JOB_COMPLETE,
-    PLAY_JOB_ERROR,
     GET_JOB_DETAILS_COMPLETE,
     GET_JOB_DETAILS_REQUEST,
     GET_JOB_DETAILS_ERROR,
@@ -23,15 +20,7 @@ import {
     DELETE_JOB_ERROR,
     SHOW_CREATE_JOB_MODAL, HIDE_CREATE_JOB_MODAL, UPDATE_JOB_REQUEST, UPDATE_JOB_COMPLETE
 } from './types';
-import {
-    getAllJobs as getAllJobQL,
-    updateJob,
-    checkJobName as checkJobNameQL,
-    play,
-    jobDetails,
-    createJob,
-    deleteJob
-} from '../helpers/graphql';
+import * as jobsApi from '../api/jobs';
 
 import {getDataForJobNameComponent, getEditJobData} from '../reducers';
 
@@ -42,7 +31,7 @@ export const requestAllJobs = async () => ({
             type: GET_ALL_JOBS_REQUEST
         });
 
-        const jobs = await getAllJobQL();
+        const jobs = await jobsApi.getAllJobs();
         dispatch({
             type: GET_ALL_JOBS_COMPLETE,
             jobs
@@ -59,7 +48,7 @@ export const checkJobName = (name, jobId) => ({
             name
         });
 
-        const result = await checkJobNameQL(name, jobId);
+        const result = await jobsApi.validateName(jobId, name);
 
         dispatch({
             type: CHECK_JOB_NAME_COMPLETE,
@@ -125,7 +114,15 @@ export const saveBeingEditedJob = async () => async (dispatch, getState) => {
             loading: true
         }));
 
-        const newJob = await dispatch(requestUpdateJob(_id, name, repoType, repoUrl, branch, credential, description, cdFilePath));
+        const newJob = await dispatch(requestUpdateJob(_id, {
+            name,
+            repoType,
+            repoUrl,
+            branch,
+            credential,
+            description,
+            cdFilePath
+        }));
 
         dispatch(updateEditJobModalData({
             loading: false
@@ -151,7 +148,9 @@ export const requestCreateJob = async () => ({
             name
         });
 
-        const createdJob = await createJob(name);
+        const createdJob = await jobsApi.createJob({
+            name
+        });
 
         dispatch({
             type: CREATE_JOB_COMPLETE,
@@ -164,21 +163,15 @@ export const requestCreateJob = async () => ({
     errorType: CREATE_JOB_ERROR
 });
 
-export const requestUpdateJob = async (id, name, repoType, repoUrl, branch, credential, description, cdFilePath) => ({
+export const requestUpdateJob = async (id, data) => ({
     func: async (dispatch) => {
         dispatch({
             type: UPDATE_JOB_REQUEST,
             id,
-            name,
-            repoType,
-            repoUrl,
-            branch,
-            credential,
-            description,
-            cdFilePath
+            data
         });
 
-        const newJob = await updateJob(id, name, repoType, repoUrl, branch, credential, description, cdFilePath);
+        const newJob = await jobsApi.updateJob(id, data);
 
         dispatch({
             type: UPDATE_JOB_COMPLETE,
@@ -198,7 +191,7 @@ export const requestDeleteJob = async (id) => ({
             id
         });
 
-        await deleteJob(id);
+        await jobsApi.deleteJob(id);
 
         dispatch({
             type: DELETE_JOB_COMPLETE,
@@ -211,35 +204,14 @@ export const requestDeleteJob = async (id) => ({
     errorType: DELETE_JOB_ERROR
 });
 
-export const requestPlayJob = async (id) => ({
-    func: async (dispatch) => {
-        dispatch({
-            type: PLAY_JOB_REQUEST,
-            id
-        });
-
-        const build = await play(id);
-
-        dispatch({
-            type: PLAY_JOB_COMPLETE,
-            build,
-            jobId: id
-        });
-
-        return build;
-    },
-
-    errorType: PLAY_JOB_ERROR
-});
-
-export const requestJobDetails = async (id, includeBuilds) => ({
+export const requestJobDetails = async (id) => ({
     func: async (dispatch) => {
         dispatch({
             type: GET_JOB_DETAILS_REQUEST,
             id
         });
 
-        const job = await jobDetails(id, includeBuilds);
+        const job = await jobsApi.getJobDetails(id);
 
         dispatch({
             type: GET_JOB_DETAILS_COMPLETE,

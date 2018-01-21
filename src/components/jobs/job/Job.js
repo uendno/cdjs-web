@@ -7,7 +7,8 @@ import Proptypes from 'prop-types';
 import moment from 'moment';
 import './Job.css';
 import {getJob, getBuildsForJob} from '../../../reducers';
-import {requestJobDetails, requestPlayJob} from '../../../actions/jobs';
+import {requestJobDetails} from '../../../actions/jobs';
+import {requestCreateBuild} from '../../../actions/builds';
 import BuildProgressComponent from '../build-progress/BuildProgress';
 import CommitInfoComponent from '../commit-info/CommitInfo';
 
@@ -20,7 +21,7 @@ class JobComponent extends Component {
     }
 
     render() {
-        const {job, builds, requestPlayJob} = this.props;
+        const {job, builds, requestCreateBuild} = this.props;
 
         return (
             <div className="job-component">
@@ -31,9 +32,9 @@ class JobComponent extends Component {
                         ><i className="fa fa-arrow-left" aria-hidden="true"/></Button>
                         <span className="page-title">{job.name}</span>
                     </div>
-                        <div className="action-buttons">
+                    <div className="action-buttons">
                         <Button className="button-with-icon play-job-button action-button"
-                                onClick={() => requestPlayJob(job._id)}
+                                onClick={() => requestCreateBuild(job._id)}
                                 disabled={job.status !== 'active'}
                         ><i className="fa fa-play" aria-hidden="true"/> Trigger a build</Button>
                     </div>
@@ -70,8 +71,10 @@ class JobComponent extends Component {
                 <Col md={5}>
                     <BuildProgressComponent build={build} includeDescription={true}/>
                 </Col>
-                <Col md={1}>
-
+                <Col md={2}>
+                    <p>
+                        <b>{build.agent && build.agent.name}</b>
+                    </p>
                 </Col>
             </Row>
         )
@@ -92,7 +95,7 @@ JobComponent.propTypes = {
     job: Proptypes.object.isRequired,
     builds: Proptypes.array.isRequired,
     requestJobDetails: Proptypes.func.isRequired,
-    requestPlayJob: Proptypes.func.isRequired
+    requestCreateBuild: Proptypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -108,5 +111,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default withRouter(connect(mapStateToProps, {
     requestJobDetails,
-    requestPlayJob
+    requestCreateBuild
 })(JobComponent));

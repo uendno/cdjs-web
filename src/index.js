@@ -8,15 +8,11 @@ import './index.css';
 import App from './components/App';
 import configureStore from './store/configureStore';
 import registerServiceWorker from './registerServiceWorker';
-import {createWS} from './helpers/socket';
+import {createWS} from './services/socket';
 import 'moment-duration-format';
-import {getAccessToken} from './reducers';
-import * as graphQLHelper from './helpers/graphql';
+
 
 const store = configureStore();
-const accessToken = getAccessToken(store.getState());
-graphQLHelper.createClient(accessToken);
-
 createWS(store.dispatch, store.getState);
 
 ReactDOM.render(

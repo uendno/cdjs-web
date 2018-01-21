@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import config from '../config';
 import {editAgentImmediately} from '../actions/agents';
 import {UPDATE_JOB_BUILD_DATA, RECEIVE_LOG, CREATE_BUILD} from '../actions/types';
-import {getCurrentBuildIdThatBeingReadLogs} from '../reducers';
+import {getCurrentBuildIdThatBeingReadLogs} from '../reducers/index';
 
 const BUILD_STATUS = 'BUILD_STATUS';
 const LOG_DATA = 'LOG_DATA';

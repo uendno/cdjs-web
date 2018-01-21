@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Modal, Button, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
+import {WithContext as ReactTags} from 'react-tag-input';
 import './EditAgentModel.css';
 import AgentNameFormComponent from '../agent-name-form/AgentNameForm';
 import {closeEditAgentModal, updateAgent, updateBeingEditedAgent} from '../../../actions/agents';
@@ -10,7 +11,7 @@ import {getEditAgentData} from '../../../reducers';
 class EditAgentModal extends Component {
     render() {
         const {data, updateAgent, closeEditAgentModal, updateBeingEditedAgent} = this.props;
-        const {modal, numberOfConcurrentBuilds} = data;
+        const {modal, numberOfConcurrentBuilds, tags} = data;
         const {show, mode, loading} = modal;
 
         return (
@@ -37,6 +38,22 @@ class EditAgentModal extends Component {
                             <FormControl.Feedback/>
                         </FormGroup>
 
+                        <FormGroup>
+                            <ControlLabel>Tags</ControlLabel>
+                            <ReactTags
+                                classNames={{
+                                    tag: 'badge badge-dark tag',
+                                    remove: 'tag-delete-button',
+                                    tagInputField: 'form-control tag-input'
+                                }}
+                                tags={tags ? tags.map((text, id) => ({
+                                    id,
+                                    text
+                                })): []}
+                                handleDelete={this._handleDelete.bind(this)}
+                                handleAddition={this._handleAddition.bind(this)}
+                            />
+                        </FormGroup>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
@@ -49,6 +66,23 @@ class EditAgentModal extends Component {
                 </Modal.Footer>
             </Modal>
         )
+    }
+
+    _handleDelete(i) {
+        const {data, updateBeingEditedAgent} = this.props;
+        const {tags} = data;
+
+        tags.splice(i, 1);
+        updateBeingEditedAgent({tags});
+    }
+
+    _handleAddition(tag) {
+        const {data, updateBeingEditedAgent} = this.props;
+        const {tags} = data;
+
+        tags.push(tag);
+
+        updateBeingEditedAgent({tags});
     }
 }
 

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {
     GET_ALL_JOBS_COMPLETE,
     GET_JOB_DETAILS_COMPLETE,
-    PLAY_JOB_COMPLETE,
+    CREATE_BUILD_COMPLETE,
     CREATE_BUILD,
     DELETE_JOB_COMPLETE
 } from '../actions/types';
@@ -65,7 +65,7 @@ const jobs = (state = {
         }
 
         case CREATE_BUILD:
-        case PLAY_JOB_COMPLETE: {
+        case CREATE_BUILD_COMPLETE: {
             const job = getJob(state, action.jobId);
             addOrUpdateJobIfNeeded({...job, lastBuild: action.build});
 

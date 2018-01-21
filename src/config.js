@@ -5,3 +5,5 @@ export default {
         socketNamespace: '/web'
     }
 }
+
+export const API_END_POINT = '/api';

@@ -4,6 +4,7 @@ import Alert from 'react-s-alert';
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import './App.css';
+import localStorageSrv from '../services/localStorage';
 import JobsComponent from './jobs/Jobs';
 import JobComponent from './jobs/job/Job';
 import NavComponent from './nav/Nav';
@@ -22,7 +23,7 @@ import EditAgentModal from './agents/edit-agent-modal/EditAgentModal';
 
 const PrivateRoute = ({component: Component, ...rest}) => (
     <Route {...rest} render={props => {
-        const accessToken = localStorage.getItem('accessToken');
+        const accessToken = localStorageSrv.get('accessToken');
 
         return (
             accessToken ? (

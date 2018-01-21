@@ -1,2 +1,23 @@
-.edit-agent-modal-component #agent-concurrent-builds-input {
-  max-width: 100px; }
+.edit-agent-modal-component .content {
+  padding: 8px 16px; }
+  .edit-agent-modal-component .content #agent-concurrent-builds-input {
+    max-width: 100px; }
+  .edit-agent-modal-component .content .tag-delete-button {
+    color: white;
+    margin-left: 4px;
+    font-size: 16px;
+    cursor: pointer; }
+  .edit-agent-modal-component .content .badge {
+    margin-right: 8px;
+    margin-bottom: 8px; }
+  .edit-agent-modal-component .content .tag {
+    font-size: 14px;
+    padding: 5px 9px; }
+  .edit-agent-modal-component .content .ReactTags__tagInput {
+    display: inline; }
+    .edit-agent-modal-component .content .ReactTags__tagInput .tag-input {
+      margin-bottom: 8px;
+      position: relative;
+      bottom: 3px;
+      display: inline-block;
+      width: 150px; }

@@ -3,10 +3,13 @@ import {
     GET_BUILD_DETAILS_COMPLETE,
     GET_BUILD_DETAILS_ERROR,
     READ_LOG,
-    CANCEL_READ_LOG
+    CANCEL_READ_LOG,
+    CREATE_BUILD_REQUEST,
+    CREATE_BUILD_COMPLETE,
+    CREATE_BUILD_ERROR
 } from './types';
-import {buildDetails} from '../helpers/graphql';
-import * as socketHelper from '../helpers/socket';
+import * as buildsApi from '../api/builds';
+import * as socketSrv from '../services/socket';
 
 export const getBuildDetails = async (id, jobId) => ({
     func: async (dispatch) => {
@@ -15,7 +18,7 @@ export const getBuildDetails = async (id, jobId) => ({
             id
         });
 
-        const build = await buildDetails(id);
+        const build = await buildsApi.getBuildDetails(id);
 
         dispatch({
             type: GET_BUILD_DETAILS_COMPLETE,
@@ -31,7 +34,7 @@ export const getBuildDetails = async (id, jobId) => ({
 
 export const readLogs = (buildId) => {
 
-    socketHelper.startReadLogs(buildId);
+    socketSrv.startReadLogs(buildId);
 
     return {
         type: READ_LOG,
@@ -41,9 +44,30 @@ export const readLogs = (buildId) => {
 
 export const cancelReadLogs = () => {
 
-    socketHelper.cancelReadLogs();
+    socketSrv.cancelReadLogs();
 
     return {
         type: CANCEL_READ_LOG
     }
 };
+
+export const requestCreateBuild = async (jobId) => ({
+    func: async (dispatch) => {
+        dispatch({
+            type: CREATE_BUILD_REQUEST,
+            jobId
+        });
+
+        const build = await buildsApi.createBuild(jobId);
+
+        dispatch({
+            type: CREATE_BUILD_COMPLETE,
+            build,
+            jobId
+        });
+
+        return build;
+    },
+
+    errorType: CREATE_BUILD_ERROR
+});

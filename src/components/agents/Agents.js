@@ -51,7 +51,7 @@ class NodesComponent extends Component {
                                     <th>IP address</th>
                                     <th>Status</th>
                                     <th>Last online</th>
-                                    <th>Allowed number of concurrent builds</th>
+                                    <th>Concurrency</th>
                                     <th>Enabled</th>
                                     <th></th>
                                 </tr>

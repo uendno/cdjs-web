@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {getEditAgentData} from '../../../reducers/index';
 import {updateBeingEditedAgent, closeAddAgentModal, addAgent, checkAgentName} from '../../../actions/agents';
 import AgentNameFormComponent from '../agent-name-form/AgentNameForm';
+import './NewAgentModal.css';
 
 
 class NewAgentModal extends Component {

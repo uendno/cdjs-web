@@ -18,13 +18,7 @@ import {
     UPDATE_CREDENTIAL_ERROR,
     UPDATE_CREDENTIAL_REQUEST
 } from './types';
-import {
-    getAllCredentials as getAllCredentialsQL,
-    checkCredentialName as checkCredentialNameQL,
-    createCredential as createCredentialQL,
-    deleteCredential as deleteCredentialQL,
-    updateCredential as updateCredentialQL,
-} from '../helpers/graphql';
+import * as credentialsApi from '../api/credentials';
 
 export const requestAllCredentials = async () => ({
     func: async (dispatch) => {
@@ -32,7 +26,7 @@ export const requestAllCredentials = async () => ({
             type: GET_ALL_CREDENTIALS_REQUEST
         });
 
-        const credentials = await getAllCredentialsQL();
+        const credentials = await credentialsApi.getAllCredentials();
 
         dispatch({
             type: GET_ALL_CREDENTIALS_COMPLETE,
@@ -74,7 +68,7 @@ export const checkCredentialName = async (name, currentCredentialId) => ({
             currentCredentialId
         });
 
-        const result = await checkCredentialNameQL(name, currentCredentialId);
+        const result = await credentialsApi.validateName(currentCredentialId, name);
 
         dispatch({
             type: CHECK_CREDENTIAL_NAME_COMPLETE,
@@ -91,14 +85,20 @@ export const requestCreateCredential = async (name, type, data) => ({
     func: async (dispatch) => {
         dispatch({
             type: CREATE_CREDENTIAL_REQUEST,
-            credentialType: type,
-            name,
-            data
+            data: {
+                type,
+                name,
+                data
+            }
         });
 
         let credential;
 
-        credential = await createCredentialQL(name, type, data);
+        credential = await credentialsApi.createCredential({
+            type,
+            name,
+            data
+        });
 
         dispatch({
             type: CREATE_CREDENTIAL_COMPLETE,
@@ -119,7 +119,7 @@ export const requestUpdateCredential = async (id, updateData) => ({
             updateData
         });
 
-        const credential = await updateCredentialQL(id, updateData);
+        const credential = await credentialsApi.updateCredential(id, updateData);
 
         dispatch({
             type: UPDATE_CREDENTIAL_COMPLETE,
@@ -140,7 +140,7 @@ export const deleteCredential = async (id) => ({
             id
         });
 
-        await deleteCredentialQL(id);
+        await credentialsApi.deleteCredential(id);
 
         dispatch({
             type: DELETE_CREDENTIAL_COMPLETE,
