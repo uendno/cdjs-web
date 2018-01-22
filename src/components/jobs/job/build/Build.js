@@ -7,16 +7,17 @@ import './Build.css';
 import {getBuild} from '../../../../reducers'
 import {getBuildDetails, readLogs, cancelReadLogs} from '../../../../actions/builds';
 import LogViewerComponent from './log-viewer/LogViewer';
+import FilesComponent from './files/Files';
 import BuildProgressComponent from '../../build-progress/BuildProgress';
+import CommitInfoComponent from '../../commit-info/CommitInfo';
 
 class BuildComponent extends Component {
 
     componentDidMount() {
         const {match, getBuildDetails, readLogs} = this.props;
         const buildId = match.params.buildId;
-        const jobId = match.params.jobId;
 
-        getBuildDetails(buildId, jobId);
+        getBuildDetails(buildId);
         readLogs(buildId);
     }
 
@@ -37,11 +38,32 @@ class BuildComponent extends Component {
                                 onClick={this._handleCancel.bind(this)}
                         ><i className="fa fa-arrow-left" aria-hidden="true"/></Button>
                         <span className="page-title">Build #{build && build.number}</span>
-                        <div className="build-progress-component-wrapper">
-                            <BuildProgressComponent build={build} includeDescription={false}/>
-                        </div>
+
                     </div>
                 </div>
+                <Row className="show-grid">
+                    <Col md={6}>
+                        <div className="achievements-wrapper">
+                            <Panel header="Information">
+                                <br/>
+                                <CommitInfoComponent build={build}/>
+                                <div className="build-progress-component-wrapper">
+                                    <BuildProgressComponent build={build} includeDescription={true}/>
+                                </div>
+                                Run on: <b>{build.agent ? build.agent.name : null}</b>
+                            </Panel>
+                        </div>
+
+                    </Col>
+                    <Col md={6}>
+                        <div className="achievements-wrapper">
+                            <Panel header="Achievements">
+                                <FilesComponent/>
+                            </Panel>
+                        </div>
+
+                    </Col>
+                </Row>
                 <Row className="show-grid">
                     <Col md={12}>
                         <div className="log-monitor-wrapper">
@@ -49,7 +71,6 @@ class BuildComponent extends Component {
                                 <LogViewerComponent/>
                             </Panel>
                         </div>
-
                     </Col>
                 </Row>
             </div>
@@ -57,8 +78,8 @@ class BuildComponent extends Component {
     }
 
     _handleCancel() {
-        const {history} = this.props;
-        history.goBack();
+        const {history, match} = this.props;
+        history.push('/jobs/' + match.params.id);
     }
 }
 

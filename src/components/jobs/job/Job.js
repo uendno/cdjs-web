@@ -55,7 +55,7 @@ class JobComponent extends Component {
 
     _handleCancel() {
         const {history} = this.props;
-        history.goBack();
+        history.push('/jobs');
     }
 
     _renderBuild(job, build) {

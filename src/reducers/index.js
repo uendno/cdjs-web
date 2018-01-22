@@ -8,7 +8,7 @@ import builds, * as fromBuilds from './builds';
 import auth, * as fromAuth from './auth';
 import agents, * as fromAgents from './agents';
 import editAgent, * as fromEditAgent from './editAgent';
-
+import files from './files';
 
 const app = combineReducers({
     jobs,
@@ -19,7 +19,8 @@ const app = combineReducers({
     currentBuildLogs,
     auth,
     agents,
-    editAgent
+    editAgent,
+    files
 });
 
 export default app;
@@ -84,3 +85,7 @@ export const getAgentById = (state, id) => fromAgents.getAgentById(state.agents,
 export const getEditAgentData = (state) => state.editAgent;
 
 export const getDataForEditAgentNameFormComponent = (state) => fromEditAgent.getDataForEditNameForm(state.editAgent);
+
+// files
+
+export const getFileTree = (state) => state.files;

@@ -6,12 +6,15 @@ import {
     CANCEL_READ_LOG,
     CREATE_BUILD_REQUEST,
     CREATE_BUILD_COMPLETE,
-    CREATE_BUILD_ERROR
+    CREATE_BUILD_ERROR,
+    GET_FILES_COMPLETE,
+    GET_FILES_ERROR,
+    GET_FILES_REQUEST
 } from './types';
 import * as buildsApi from '../api/builds';
 import * as socketSrv from '../services/socket';
 
-export const getBuildDetails = async (id, jobId) => ({
+export const getBuildDetails = async (id) => ({
     func: async (dispatch) => {
         dispatch({
             type: GET_BUILD_DETAILS_REQUEST,
@@ -22,7 +25,6 @@ export const getBuildDetails = async (id, jobId) => ({
 
         dispatch({
             type: GET_BUILD_DETAILS_COMPLETE,
-            jobId,
             build
         });
 
@@ -70,4 +72,24 @@ export const requestCreateBuild = async (jobId) => ({
     },
 
     errorType: CREATE_BUILD_ERROR
+});
+
+export const requestFileList = async (buildId) => ({
+    func: async (dispatch) => {
+        dispatch({
+            type: GET_FILES_REQUEST,
+            buildId
+        });
+
+        const tree = await buildsApi.getFileList(buildId);
+
+        dispatch({
+            type: GET_FILES_COMPLETE,
+            tree
+        });
+
+        return tree;
+    },
+
+    errorType: GET_FILES_ERROR
 });

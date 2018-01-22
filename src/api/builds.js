@@ -16,3 +16,8 @@ export const createBuild = (jobId) => {
     })
 };
 
+export const getFileList = (buildId) => {
+    return requestAuth({
+        url: '/builds/' + buildId + '/files'
+    })
+};

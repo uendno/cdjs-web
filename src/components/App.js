@@ -18,6 +18,7 @@ import LoginComponent from './login/Login';
 import AgentsComponent from './agents/Agents';
 import NewAgentModal from './agents/new-agent-modal/NewAgentModal';
 import EditAgentModal from './agents/edit-agent-modal/EditAgentModal';
+import FilesComponent from './jobs/job/build/files/Files';
 // import {showError} from '../helpers/alert';
 
 
@@ -63,6 +64,7 @@ class App extends Component {
                                 <div className="main-content">
                                     <Switch>
                                         <Route exact path="/" render={() => <Redirect to="/jobs"/>}/>
+                                        <Route path="/jobs/:id/builds/:buildId/files" component={FilesComponent} />
                                         <Route path="/jobs/:id/builds/:buildId" component={BuildComponent}/>
                                         <Route path="/jobs/:id/edit" component={EditJobComponent}/>
                                         <Route path="/jobs/:id" component={JobComponent}/>

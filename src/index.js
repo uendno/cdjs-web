@@ -4,6 +4,7 @@ import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
 import 'font-awesome/css/font-awesome.min.css';
 import 'react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.min.css';
+import 'react-treeview/react-treeview.css';
 import './index.css';
 import App from './components/App';
 import configureStore from './store/configureStore';
