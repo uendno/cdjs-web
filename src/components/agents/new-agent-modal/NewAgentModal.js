@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Modal, Button} from 'react-bootstrap';
+import {Modal, Button, FormGroup, ControlLabel, Tooltip} from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {getEditAgentData} from '../../../reducers/index';
 import {updateBeingEditedAgent, closeAddAgentModal, addAgent, checkAgentName} from '../../../actions/agents';
 import AgentNameFormComponent from '../agent-name-form/AgentNameForm';
@@ -9,6 +10,15 @@ import './NewAgentModal.css';
 
 
 class NewAgentModal extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showCopiedTooltip: false
+        }
+    }
+
     render() {
         const {data, closeAddAgentModal, addAgent} = this.props;
         const {modal} = data;
@@ -22,7 +32,7 @@ class NewAgentModal extends Component {
                 </Modal.Header>
                 <Modal.Body className="body">
                     <div className="content">
-                        <AgentNameFormComponent/>
+                        <AgentNameFormComponent disabled={token && true}/>
                         {this._renderTokenInfo(token)}
                     </div>
                 </Modal.Body>
@@ -44,12 +54,38 @@ class NewAgentModal extends Component {
     }
 
     _renderTokenInfo(token) {
+        const {showCopiedTooltip} = this.state;
+
         if (token) {
             return (
-                <div>
-                    Copy this token for adding new agent before closing this dialog. <br/>
-                    <b>{token}</b>
-                </div>
+                <FormGroup>
+                    <ControlLabel>Agent's access token</ControlLabel>
+                    <div id="token" className="agent-token">
+                        {token}
+                        <CopyToClipboard text={token}
+                                   onCopy={() => {
+                                       this.setState({
+                                           showCopiedTooltip: true
+                                       });
+
+                                       setTimeout(() => {
+                                           this.setState({
+                                               showCopiedTooltip: false
+                                           });
+                                       }, 500);
+                                   }}>
+                            <button className='btn btn-default copy-button'>
+                                <i className=" fa fa-files-o" aria-hidden="true"/>
+                            </button>
+                        </CopyToClipboard>
+                    </div>
+                    <Tooltip placement="bottom" className={`tool-tip ${showCopiedTooltip ? 'in' : ''}`}
+                             id='copied-tooltip'>
+                        Copied!
+                    </Tooltip>
+                    <p className="note">Warning: Copy this access token before closing this modal in order use it to
+                        connect agent to master.</p>
+                </FormGroup>
             )
         } else {
             return null;

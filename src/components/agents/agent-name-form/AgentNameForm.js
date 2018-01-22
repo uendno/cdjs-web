@@ -19,7 +19,7 @@ const _checkIfAgentNameExists = _.throttle(async (name, currentAgentId, checkAge
 
 class AgentNameForm extends Component {
     render() {
-        const {data} = this.props;
+        const {data, disabled} = this.props;
         const {name, invalidNameMessage} = data;
 
 
@@ -32,6 +32,7 @@ class AgentNameForm extends Component {
                                  id="agent-name-input"
                                  placeholder="Enter a unique name"
                                  value={name || ""}
+                                 disabled={disabled}
                                  onChange={this._handleNameInputChange.bind(this)}
                     />
                     <FormControl.Feedback/>
@@ -69,6 +70,7 @@ AgentNameForm.propTypes = {
     updateEditAgentModalData: PropTypes.func.isRequired,
     updateBeingEditedAgent: PropTypes.func.isRequired,
     checkAgentName: PropTypes.func.isRequired,
+    disabled: PropTypes.bool
 };
 
 const mapStateToProps = (state) => {

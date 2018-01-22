@@ -74,7 +74,7 @@ class NodesComponent extends Component {
                 <td><b>{agent.name}</b></td>
                 <td>{agent.ip}</td>
                 <td>{this._renderStatus(agent.status)}</td>
-                <td>{agent.lastOnline ? moment(agent.lastOnline).calendar() : null}</td>
+                <td>{agent.status === 'online' ? 'Now' : (agent.lastOnline ? moment(agent.lastOnline).calendar() : null)}</td>
                 <td>{agent.numberOfConcurrentBuilds}</td>
                 <td>
                     <Switch value={agent.enabled} onChange={(el, state) => {

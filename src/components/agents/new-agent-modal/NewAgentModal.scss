@@ -1,5 +1,41 @@
 .new-node-modal-component {
   .content {
     padding: 8px 16px;
+
+    .agent-token {
+      width: 100%;
+      background-color: #f7f8fa;
+      height: 34px;
+      font-size: 14px;
+      line-height: 1.42857143;
+      color: #555;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      position: relative;
+      text-overflow: ellipsis;
+      word-break: break-all;
+      white-space: nowrap;
+      overflow: hidden;
+      padding: 6px 50px 6px 12px;
+
+      .copy-button {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 34px;
+        border: none;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-left: solid 1px #ddd;
+      }
+    }
+
+    .tool-tip {
+      position: absolute;
+      right: 18px;
+      top: 159px;
+      transition: 0.2s ease-in-out;
+    }
   }
 }

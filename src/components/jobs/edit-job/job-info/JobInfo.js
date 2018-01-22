@@ -24,7 +24,7 @@ import {
 import {openCreateCredentialModal, requestAllCredentials} from "../../../../actions/credentials";
 import JobNameFormComponent from '../../job-name-form/JobNameForm';
 import './JobInfo.css';
-import Clipboard from 'react-clipboard.js';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 class JobInfoComponent extends Component {
 
@@ -217,8 +217,8 @@ class JobInfoComponent extends Component {
                 <ControlLabel>Webhook URL</ControlLabel>
                 <div className="webhook-url">
                     {webhookUrl}
-                    <Clipboard data-clipboard-text={webhookUrl} className="copy-button" button-title="I'm a tooltip"
-                               onSuccess={() => {
+                    <CopyToClipboard text={webhookUrl}
+                               onCopy={() => {
                                    this.setState({
                                        showCopiedTooltip: true
                                    });
@@ -229,8 +229,10 @@ class JobInfoComponent extends Component {
                                        });
                                    }, 500);
                                }}>
-                        <i className="fa fa-files-o" aria-hidden="true"/>
-                    </Clipboard>
+                        <button className="btn btn-default copy-button">
+                            <i className="fa fa-files-o" aria-hidden="true"/>
+                        </button>
+                    </CopyToClipboard>
                 </div>
                 <Tooltip placement="bottom" className={`tool-tip ${showCopiedTooltip ? 'in' : ''}`} id='copied-tooltip'>
                     Copied!

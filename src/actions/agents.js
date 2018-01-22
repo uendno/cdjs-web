@@ -73,7 +73,7 @@ export const addAgent = async () => ({
             name
         });
         const token = res.token;
-        const agent = _.omit(res, 'token');
+        const agent = res.agent;
 
         dispatch({
             type: ADD_AGENT_COMPLETE,

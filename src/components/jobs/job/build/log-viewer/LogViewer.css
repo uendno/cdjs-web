@@ -23,7 +23,9 @@
     .logs-wrapper .line .message {
       padding-left: 20px;
       flex: 1;
-      text-indent: -8px; }
+      text-indent: -8px;
+      overflow: hidden;
+      word-wrap: break-word; }
       .logs-wrapper .line .message.error {
         color: #ff5f5f; }
       .logs-wrapper .line .message.system {
