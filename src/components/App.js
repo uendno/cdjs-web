@@ -23,64 +23,68 @@ import FilesComponent from './jobs/job/build/files/Files';
 
 
 const PrivateRoute = ({component: Component, ...rest}) => (
-    <Route {...rest} render={props => {
+  <Route
+    {...rest}
+    render={(props) => {
         const accessToken = localStorageSrv.get('accessToken');
 
         return (
             accessToken ? (
-                <Component {...props}/>
+              <Component {...props}/>
             ) : (
-                <Redirect to={{
+              <Redirect to={{
                     pathname: '/login',
-                    state: {from: props.location}
-                }}/>
+                    state: {from: props.location},
+                }}
+              />
             )
-        )
-    }}/>
+        );
+    }}
+  />
 );
 
 class App extends Component {
+  // componentDidMount() {
+  //     showError('Opps','asdasdaj andskasd asd');
+  // }
 
-    // componentDidMount() {
-    //     showError('Opps','asdasdaj andskasd asd');
-    // }
 
-
-    render() {
-        return (
-            <div className="app-component">
-                <Alert stack={true} contentTemplate={AlertComponent}/>
-                <div className='routes'>
-                    <Switch>
-                        <Route exect path="/login" component={LoginComponent}/>
-                        <PrivateRoute component={() => (
-                            <div>
-                                <EditCredentialModal/>
-                                <div className="nav-component-container">
-                                    <NavComponent/>
-                                    <NewAgentModal/>
-                                    <EditAgentModal/>
-                                </div>
-                                <div className="main-content">
-                                    <Switch>
-                                        <Route exact path="/" render={() => <Redirect to="/jobs"/>}/>
-                                        <Route path="/jobs/:id/builds/:buildId/files" component={FilesComponent} />
-                                        <Route path="/jobs/:id/builds/:buildId" component={BuildComponent}/>
-                                        <Route path="/jobs/:id/edit" component={EditJobComponent}/>
-                                        <Route path="/jobs/:id" component={JobComponent}/>
-                                        <Route exact path="/jobs" component={JobsComponent}/>
-                                        <Route exact path="/credentials" component={CredentialsComponent}/>
-                                        <Route exact path="/agents" component={AgentsComponent}/>
-                                        <Route component={NotFoundComponent}/>
-                                    </Switch>
-                                </div>
-                            </div>
-                        )}/>
-                    </Switch>
+  render() {
+    return (
+      <div className="app-component">
+        <Alert stack contentTemplate={AlertComponent}/>
+        <div className="routes">
+          <Switch>
+            <Route exect path="/login" component={LoginComponent}/>
+            <PrivateRoute component={() => (
+              <div>
+                <EditCredentialModal/>
+                <div className="nav-component-container">
+                  <NavComponent/>
+                  <NewAgentModal/>
+                  <EditAgentModal/>
                 </div>
-            </div>
-        );
-    }
+                <div className="main-content">
+                  <Switch>
+                    <Route exact path="/" render={() => <Redirect to="/jobs"/>}/>
+                    <Route path="/jobs/:id/builds/:buildId/files" component={FilesComponent} />
+                    <Route path="/jobs/:id/builds/:buildId" component={BuildComponent}/>
+                    <Route path="/jobs/:id/edit" component={EditJobComponent}/>
+                    <Route path="/jobs/:id" component={JobComponent}/>
+                    <Route exact path="/jobs" component={JobsComponent}/>
+                    <Route exact path="/credentials" component={CredentialsComponent}/>
+                    <Route exact path="/agents" component={AgentsComponent}/>
+                    <Route component={NotFoundComponent}/>
+                  </Switch>
+                </div>
+              </div>
+                        )}
+            />
+          </Switch>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;

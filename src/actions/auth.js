@@ -1,25 +1,20 @@
-import {LOGIN_REQUEST, LOGIN_COMPLETE, LOGIN_ERROR} from './types';
-import * as apiHelper from '../api/auth';
+import {LOGIN} from './types';
 import localStorageSrv from '../services/localStorage';
+import {post} from '../helpers/api';
 
-export const login = async (username, password) => ({
-    func: async (dispatch) => {
-        dispatch({
-            type: LOGIN_REQUEST,
-            username,
-            password
-        });
+export const login = async(email, password) => ({
+  type: LOGIN,
+  func: () => {
+    const response = post('/auth', {
+      email,
+      password,
+    });
 
-        const accessToken = await apiHelper.login(username, password);
-        localStorageSrv.set('accessToken', accessToken);
+    const accessToken = response.data;
+    localStorageSrv.set('accessToken', accessToken);
 
-        dispatch({
-            type: LOGIN_COMPLETE,
-            accessToken
-        });
-
-        return true;
-    },
-
-    errorType: LOGIN_ERROR
+    return response;
+  },
 });
+
+export const logout = async() => ({});

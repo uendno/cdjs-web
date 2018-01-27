@@ -3,63 +3,69 @@ import {connect} from 'react-redux';
 import {FormControl, FormGroup, ControlLabel, Button, HelpBlock} from 'react-bootstrap';
 import './Login.css';
 import logo from '../../assets/images/logo.png';
-import {login} from "../../actions/auth";
+import {login} from '../../actions/auth';
 
 class Login extends Component {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.state = {
-            email: null,
-            password: null,
-            help: null
-        }
+    this.state = {
+      email: null,
+      password: null,
+      help: null,
+    };
+  }
+
+  async _submit() {
+    const {login, history} = this.props;
+    const {email, password} = this.state;
+    const result = await login(email, password);
+
+    if (result) {
+      history.replace('/');
     }
+  }
 
-    render() {
-        const {email, password, help} = this.state;
+  render() {
+    const {email, password, help} = this.state;
 
-        return (
-            <div className='login-component'>
-                <div className='login-form'>
-                    <img className='logo' src={logo}/>
-                    <FormGroup controlId='email'>
-                        <ControlLabel>Email</ControlLabel>
-                        <FormControl type='email'
-                                     id="email"
-                                     value={email || ""}
-                                     onChange={(event) => {
-                                         this.setState({
-                                             email: event.target.value
-                                         })
-                                     }}/>
-                    </FormGroup>
-                    <FormGroup controlId='password'>
-                        <ControlLabel>Password</ControlLabel>
-                        <FormControl type='password' value={password || ""} onChange={(event) => {
+    return (
+      <div className="login-component">
+        <div className="login-form">
+          <img className="logo" src={logo} alt="Logo"/>
+          <FormGroup controlId="email">
+            <ControlLabel>Email</ControlLabel>
+            <FormControl
+              type="email"
+              id="email"
+              value={email || ''}
+              onChange={(event) => {
                             this.setState({
-                                password: event.target.value
-                            })
-                        }}/>
-                    </FormGroup>
-                    {help && <HelpBlock>{help}</HelpBlock>}
-                    <Button bsClass='btn btn-success login-button' onClick={this._submit.bind(this)}>Login</Button>
-                </div>
-            </div>
-        )
-    }
-
-    async _submit() {
-        const {login, history} = this.props;
-        const {email, password} = this.state;
-        const result = await login(email, password);
-
-        if (result) {
-            history.replace('/');
-        }
-    }
+                                email: event.target.value,
+                            });
+                        }}
+            />
+          </FormGroup>
+          <FormGroup controlId="password">
+            <ControlLabel>Password</ControlLabel>
+            <FormControl
+              type="password"
+              value={password || ''}
+              onChange={(event) => {
+                            this.setState({
+                                password: event.target.value,
+                            });
+                        }}
+            />
+          </FormGroup>
+          {help && <HelpBlock>{help}</HelpBlock>}
+          <Button bsClass="btn btn-success login-button" onClick={this._submit.bind(this)}>Login</Button>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default connect(null, {
-    login
+  login,
 })(Login);

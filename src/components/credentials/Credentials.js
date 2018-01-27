@@ -8,99 +8,109 @@ import {openCreateCredentialModal, requestAllCredentials, deleteCredential} from
 import './Credentials.css';
 
 class CredentialsComponent extends Component {
+  componentDidMount() {
+    const {requestAllCredentials} = this.props;
+    requestAllCredentials();
+  }
 
-    componentDidMount() {
-        const {requestAllCredentials} = this.props;
-        requestAllCredentials();
-    }
 
-    render() {
-        const {openCreateCredentialModal, credentials} = this.props;
+  _renderCredential(credential) {
+    const {deleteCredential, openCreateCredentialModal} = this.props;
 
-        return (
-            <div className="credentials-component">
-                <div className="page-header">
-                    <div className="header-info">
-                        <span className="page-title">Credentials</span>
-                    </div>
-                    <div className="action-buttons">
-                        <Button className="button-with-icon action-button new-credential-button"
-                                onClick={() => openCreateCredentialModal('create')}
-                        ><i className="fa fa-plus-circle" aria-hidden="true"/> New Credential</Button>
-                    </div>
-                </div>
-                <Row className="content">
-                    <Col md={12}>
-                        <Panel>
-                            <Table>
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                    <th>Data</th>
-                                    <th>Created at</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {credentials.map((credential, index) => this._renderCredential(credential, index))}
-                                </tbody>
-                            </Table>
-                        </Panel>
-                    </Col>
-                </Row>
-            </div>
-        )
-    }
-
-    _renderCredential(credential) {
-        const {deleteCredential, openCreateCredentialModal} = this.props;
-
-        return (
-            <tr key={credential._id}>
-                <td>{credential.name}</td>
-                <td>{credential.type}</td>
-                <td>{this._renderCredentialData(credential)}</td>
-                <td>{moment(credential.createdAt).calendar()}</td>
-                <td>
-                    <Button className="action-button"
-                            onClick={() => openCreateCredentialModal('edit', credential)}
-                    ><i className="fa fa-pencil" aria-hidden="true"/></Button>
-                    <Button className="action-button red"
-                            onClick={() => {
+    return (
+      <tr key={credential._id}>
+        <td>{credential.name}</td>
+        <td>{credential.type}</td>
+        <td>{this._renderCredentialData(credential)}</td>
+        <td>{moment(credential.createdAt).calendar()}</td>
+        <td>
+          <Button
+            className="action-button"
+            onClick={() => openCreateCredentialModal('edit', credential)}
+          ><i className="fa fa-pencil" aria-hidden="true"/>
+          </Button>
+          <Button
+            className="action-button red"
+            onClick={() => {
                                 if (window.confirm('Are you sure want to delete this credential?')) {
-                                    deleteCredential(credential._id)
+                                    deleteCredential(credential._id);
                                 }
                             }}
-                    ><i className="fa fa-trash-o" aria-hidden="true"/></Button>
-                </td>
-            </tr>
-        )
-    }
+          ><i className="fa fa-trash-o" aria-hidden="true"/>
+          </Button>
+        </td>
+      </tr>
+    );
+  }
 
-    _renderCredentialData(credential) {
-        switch (credential.type) {
-            case 'username/password':
-                return (
-                    `${credential.data.username}/${credential.data.password}`
-                )
-        }
+  _renderCredentialData(credential) {
+    switch (credential.type) {
+      case 'username/password': {
+        return (
+          `${credential.data.username}/${credential.data.password}`
+        );
+      }
+
+      default:
+        return null;
     }
+  }
+
+  render() {
+    const {openCreateCredentialModal, credentials} = this.props;
+
+    return (
+      <div className="credentials-component">
+        <div className="page-header">
+          <div className="header-info">
+            <span className="page-title">Credentials</span>
+          </div>
+          <div className="action-buttons">
+            <Button
+              className="button-with-icon action-button new-credential-button"
+              onClick={() => openCreateCredentialModal('create')}
+            ><i className="fa fa-plus-circle" aria-hidden="true"/> New Credential
+            </Button>
+          </div>
+        </div>
+        <Row className="content">
+          <Col md={12}>
+            <Panel>
+              <Table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Data</th>
+                    <th>Created at</th>
+                    <th />
+                  </tr>
+                </thead>
+                <tbody>
+                  {credentials.map((credential, index) => this._renderCredential(credential, index))}
+                </tbody>
+              </Table>
+            </Panel>
+          </Col>
+        </Row>
+      </div>
+    );
+  }
 }
 
 CredentialsComponent.propTypes = {
-    credentials: PropTypes.array.isRequired,
-    openCreateCredentialModal: PropTypes.func.isRequired,
-    requestAllCredentials: PropTypes.func.isRequired,
-    deleteCredential: PropTypes.func.isRequired
+  credentials: PropTypes.array.isRequired,
+  openCreateCredentialModal: PropTypes.func.isRequired,
+  requestAllCredentials: PropTypes.func.isRequired,
+  deleteCredential: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-    credentials: getCredentials(state)
+const mapStateToProps = state => ({
+  credentials: getCredentials(state),
 });
 
 export default connect(mapStateToProps, {
-    openCreateCredentialModal,
-    requestAllCredentials,
-    deleteCredential
+  openCreateCredentialModal,
+  requestAllCredentials,
+  deleteCredential,
 })(CredentialsComponent);

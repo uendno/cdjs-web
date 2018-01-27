@@ -1,70 +1,69 @@
 import _ from 'lodash';
 import {
-    GET_ALL_CREDENTIALS_COMPLETE,
-    CREATE_CREDENTIAL_COMPLETE,
-    DELETE_CREDENTIAL_COMPLETE,
-    UPDATE_CREDENTIAL_COMPLETE
+  GET_ALL_CREDENTIALS_COMPLETE,
+  CREATE_CREDENTIAL_COMPLETE,
+  DELETE_CREDENTIAL_COMPLETE,
+  UPDATE_CREDENTIAL_COMPLETE,
 } from '../actions/types';
 
 
 const credentials = (state = {
-    ids: [],
-    byId: {}
+  ids: [],
+  byId: {},
 }, action) => {
-    switch (action.type) {
-        case GET_ALL_CREDENTIALS_COMPLETE: {
-            const byId = {};
-            const ids = [];
+  switch (action.type) {
+    case GET_ALL_CREDENTIALS_COMPLETE: {
+      const credentials = action.data;
+      const byId = {};
+      const ids = [];
 
-            action.credentials.forEach(c => {
-                byId[c._id] = c;
-                ids.push(c._id);
-            });
+      credentials.forEach((c) => {
+        byId[c._id] = c;
+        ids.push(c._id);
+      });
 
-            return {
-                ...state,
-                byId,
-                ids
-            }
-        }
-
-        case CREATE_CREDENTIAL_COMPLETE: {
-            const byId = {...state.byId};
-
-            byId[action.credential._id] = action.credential;
-
-            return {
-                ...state,
-                byId,
-                ids: [action.credential._id, ...state.ids]
-            }
-        }
-
-        case DELETE_CREDENTIAL_COMPLETE: {
-            return {
-                ...state,
-                byId: _.omit(state.byId, action.id),
-                ids: state.ids.filter(id => id !== action.id)
-            }
-        }
-
-        case UPDATE_CREDENTIAL_COMPLETE: {
-            const byId = {...state.byId};
-            byId[action.id] = action.credential;
-
-            return {
-                ...state,
-                byId
-            }
-        }
-
-        default:
-            return state;
+      return {
+        ...state,
+        byId,
+        ids,
+      };
     }
+
+    case CREATE_CREDENTIAL_COMPLETE: {
+      const byId = {...state.byId};
+
+      byId[action.data._id] = action.data;
+
+      return {
+        ...state,
+        byId,
+        ids: [action.data._id, ...state.ids],
+      };
+    }
+
+    case DELETE_CREDENTIAL_COMPLETE: {
+      return {
+        ...state,
+        byId: _.omit(state.byId, action.identity),
+        ids: state.ids.filter(id => id !== action.identity),
+      };
+    }
+
+    case UPDATE_CREDENTIAL_COMPLETE: {
+      const byId = {...state.byId};
+      byId[action.id] = action.credential;
+
+      return {
+        ...state,
+        byId,
+      };
+    }
+
+    default:
+      return state;
+  }
 };
 
 export default credentials;
 
-export const getCredentials = (state) => state.ids.map(id => {
-    return state.byId[id];
-});
+export const getCredentials = state => state.ids.map(id => state.byId[id]);

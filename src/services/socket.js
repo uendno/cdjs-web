@@ -14,53 +14,52 @@ const AGENT_STATUS = 'AGENT_STATUS';
 let socket;
 
 export const createWS = (dispatch, getState) => {
-    socket = io.connect(config.api.socketNamespace, {
-        path: '/api/socket.io'
+  socket = io.connect(config.api.socketNamespace, {
+    path: '/api/socket.io',
+  });
+
+  socket.on('connect', () => {
+    console.log('Connected');
+  });
+
+  socket.on(BUILD_STATUS, (data) => {
+    dispatch({
+      type: UPDATE_JOB_BUILD_DATA,
+      ...data,
     });
+  });
 
-    socket.on('connect', () => {
-        console.log('Connected');
+  socket.on(NEW_BUILD, (data) => {
+    dispatch({
+      type: CREATE_BUILD,
+      jobId: data.jobId,
+      build: data.build,
     });
+  });
 
-    socket.on(BUILD_STATUS, (data) => {
-        dispatch({
-            type: UPDATE_JOB_BUILD_DATA,
-            ...data
-        })
-    });
+  socket.on(LOG_DATA, (data) => {
+    const state = getState();
+    const currentBuildId = getCurrentBuildIdThatBeingReadLogs(state);
 
-    socket.on(NEW_BUILD, (data) => {
-        dispatch({
-            type: CREATE_BUILD,
-            jobId: data.jobId,
-            build: data.build
-        })
-    });
+    if (currentBuildId === data.buildId) {
+      dispatch({
+        type: RECEIVE_LOG,
+        logs: data.data,
+      });
+    }
+  });
 
-    socket.on(LOG_DATA, data => {
-
-        const state = getState();
-        const currentBuildId = getCurrentBuildIdThatBeingReadLogs(state);
-
-        if (currentBuildId === data.buildId) {
-            dispatch({
-                type: RECEIVE_LOG,
-                logs: data.data
-            })
-        }
-    });
-
-    socket.on(AGENT_STATUS, agent => {
-        dispatch(editAgentImmediately(agent._id, {
-            ...agent
-        }))
-    })
+  socket.on(AGENT_STATUS, (agent) => {
+    dispatch(editAgentImmediately(agent._id, {
+      ...agent,
+    }));
+  });
 };
 
 export const startReadLogs = (buildId) => {
-    socket.emit(READ_LOG, buildId);
+  socket.emit(READ_LOG, buildId);
 };
 
 export const cancelReadLogs = () => {
-    socket.emit(CANCEL_READ_LOG);
+  socket.emit(CANCEL_READ_LOG);
 };

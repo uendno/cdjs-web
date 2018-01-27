@@ -9,86 +9,85 @@ import {checkJobName, updateBeingEditedJob, updateEditJobModalData} from '../../
 
 
 const throttledCheckJobName = _.throttle((name, id, updateEditJobFormData, updateBeingEditedJob, checkJobName) => {
-        checkJobName(name, id)
-            .then(result => {
-                if (result.valid === false) {
-                    updateEditJobFormData({
-                        loading: false,
-                        invalidNameMessage: "A job with this name already exists",
-                    });
-                } else {
-                    updateEditJobFormData({
-                        loading: false
-                    })
-                }
-            });
-    },
-    1000, {
-        leading: false,
-        trailing: true
+  checkJobName(name, id)
+    .then((result) => {
+      if (result.valid === false) {
+        updateEditJobFormData({
+          loading: false,
+          invalidNameMessage: 'A job with this name already exists',
+        });
+      } else {
+        updateEditJobFormData({
+          loading: false,
+        });
+      }
     });
+},
+1000, {
+  leading: false,
+  trailing: true,
+});
 
 
 class JobNameFormComponent extends Component {
+  _handleNameInputChange(e) {
+    const {checkJobName, updateBeingEditedJob, updateEditJobFormData, data} = this.props;
+    const name = e.target.value;
 
-    render() {
-        const {data} = this.props;
-        const {invalidNameMessage, name} = data;
+    updateBeingEditedJob({
+      name,
+    });
 
-        return (
-            <div className='job-name-form-component'>
-                <FormGroup controlId="job-name-input"
-                           validationState={invalidNameMessage !== "" ? "error" : null}>
-                    <ControlLabel>Job name</ControlLabel>
-                    <FormControl type="text"
-                                 id="job-name-input"
-                                 placeholder="Enter a unique name"
-                                 value={name || ""}
-                                 onChange={this._handleNameInputChange.bind(this)}
-                    />
-                    <FormControl.Feedback/>
-                    <HelpBlock>{invalidNameMessage}</HelpBlock>
-                    <p className="note">Please note that job name must be unique in order to distinguish
-                        it from the others.</p>
-                </FormGroup>
-            </div>
-        )
-    }
+    updateEditJobFormData({
+      invalidNameMessage: '',
+      loading: true,
+    });
 
-    _handleNameInputChange(e) {
-        const {checkJobName, updateBeingEditedJob, updateEditJobFormData, data} = this.props;
-        const name = e.target.value;
+    throttledCheckJobName(name, data._id, updateEditJobFormData, updateBeingEditedJob, checkJobName);
+  }
 
-        updateBeingEditedJob({
-            name
-        });
+  render() {
+    const {data} = this.props;
+    const {invalidNameMessage, name} = data;
 
-        updateEditJobFormData({
-            invalidNameMessage: "",
-            loading: true
-        });
-
-        throttledCheckJobName(name, data._id, updateEditJobFormData, updateBeingEditedJob, checkJobName);
-    }
-
-
+    return (
+      <div className="job-name-form-component">
+        <FormGroup
+          controlId="job-name-input"
+          validationState={invalidNameMessage !== '' ? 'error' : null}
+        >
+          <ControlLabel>Job name</ControlLabel>
+          <FormControl
+            type="text"
+            id="job-name-input"
+            placeholder="Enter a unique name"
+            value={name || ''}
+            onChange={this._handleNameInputChange.bind(this)}
+          />
+          <FormControl.Feedback/>
+          <HelpBlock>{invalidNameMessage}</HelpBlock>
+          <p className="note">Please note that job name must be unique in order to distinguish
+                        it from the others.
+          </p>
+        </FormGroup>
+      </div>
+    );
+  }
 }
 
 JobNameFormComponent.propTypes = {
-    data: Proptypes.object.isRequired,
-    checkJobName: Proptypes.func.isRequired,
-    updateBeingEditedJob: Proptypes.func.isRequired,
-    updateEditJobFormData: Proptypes.func.isRequired,
+  data: Proptypes.object.isRequired,
+  checkJobName: Proptypes.func.isRequired,
+  updateBeingEditedJob: Proptypes.func.isRequired,
+  updateEditJobFormData: Proptypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-    return {
-        data: getDataForJobNameComponent(state)
-    }
-};
+const mapStateToProps = state => ({
+  data: getDataForJobNameComponent(state),
+});
 
 export default connect(mapStateToProps, {
-    checkJobName,
-    updateBeingEditedJob,
-    updateEditJobFormData: updateEditJobModalData
-})(JobNameFormComponent)
+  checkJobName,
+  updateBeingEditedJob,
+  updateEditJobFormData: updateEditJobModalData,
+})(JobNameFormComponent);
