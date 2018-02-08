@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import config from '../config';
 import {editAgentImmediately} from '../actions/agents';
-import {UPDATE_JOB_BUILD_DATA, RECEIVE_LOG, CREATE_BUILD} from '../actions/types';
+import {UPDATE_JOB_BUILD_DATA, RECEIVE_LOG, CREATE_BUILD, CREATE_BUILD_COMPLETE} from '../actions/types';
 import {getCurrentBuildIdThatBeingReadLogs} from '../reducers/index';
 
 const BUILD_STATUS = 'BUILD_STATUS';
@@ -31,9 +31,8 @@ export const createWS = (dispatch, getState) => {
 
   socket.on(NEW_BUILD, (data) => {
     dispatch({
-      type: CREATE_BUILD,
-      jobId: data.jobId,
-      build: data.build,
+      type: CREATE_BUILD_COMPLETE,
+      data: data.build,
     });
   });
 

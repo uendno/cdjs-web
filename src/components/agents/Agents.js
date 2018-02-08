@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Row, Col, Panel, Table} from 'react-bootstrap';
+import {Button, Row, Col, Panel, Table, Badge} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Switch from 'react-bootstrap-switch';
 import moment from 'moment';
@@ -8,8 +8,12 @@ import moment from 'moment';
 import './Agents.css';
 import {getAllAgents} from '../../reducers';
 import {
-  openAddAgentModal, requestAllAgents, openEditAgentModal, deleteAgent,
-  editAgentImmediately, updateEnabledPropertyForAgent,
+  openAddAgentModal,
+  requestAllAgents,
+  openEditAgentModal,
+  deleteAgent,
+  editAgentImmediately,
+  updateEnabledPropertyForAgent,
 } from '../../actions/agents';
 
 class NodesComponent extends Component {
@@ -28,36 +32,36 @@ class NodesComponent extends Component {
     return null;
   }
 
-
   _renderAgent(agent) {
     const {openEditAgentModal, editAgentImmediately, updateEnabledPropertyForAgent} = this.props;
 
     return (
       <tr key={agent._id}>
-        <td><b>{agent.name}</b></td>
+        <td>
+          <b>{agent.name}</b>
+        </td>
         <td>{agent.ip}</td>
         <td>{this._renderStatus(agent.status)}</td>
         <td>{this._renderLastOnline(agent.status, agent.lastOnline)}</td>
         <td>{agent.numberOfConcurrentBuilds}</td>
+        <td>{agent.tags.map((tag, index) =>
+          // eslint-disable-next-line
+           (<Badge key={`${tag}-${index}`}>{tag}</Badge>)
+          )}
+        </td>
         <td>
           <Switch
             value={agent.enabled}
             onChange={(el, state) => {
-                        editAgentImmediately(agent._id, {
-                            enabled: state,
-                        });
-
-                        updateEnabledPropertyForAgent(agent._id, state);
-                    }}
+            editAgentImmediately(agent._id, {enabled: state});
+            updateEnabledPropertyForAgent(agent._id, state);
+          }}
             name="test"
             bsSize="small"
           />
         </td>
         <td>
-          <Button
-            className="action-button"
-            onClick={() => openEditAgentModal(agent._id)}
-          ><i className="fa fa-pencil" aria-hidden="true"/>
+          <Button className="action-button" onClick={() => openEditAgentModal(agent._id)}><i className="fa fa-pencil" aria-hidden="true"/>
           </Button>
           <Button
             className="action-button red"
@@ -69,7 +73,6 @@ class NodesComponent extends Component {
     );
   }
 
-
   _deleteAgent(agentId) {
     const {deleteAgent} = this.props;
 
@@ -80,26 +83,32 @@ class NodesComponent extends Component {
 
   _renderStatus(status) {
     switch (status) {
-      case 'online': {
+      case 'online':
+      {
         return (
           <span className="status online">
-            <i className="fa fa-check-circle"/> Online
+            <i className="fa fa-check-circle"/>
+              Online
           </span>
         );
       }
 
-      case 'offline': {
+      case 'offline':
+      {
         return (
           <span className="status offline">
-            <i className="fa fa-times-circle"/> Offline
+            <i className="fa fa-times-circle"/>
+              Offline
           </span>
         );
       }
 
-      case 'waiting-for-connection': {
+      case 'waiting-for-connection':
+      {
         return (
           <span className="status waiting-for-connection">
-            <i className="fa fa-question-circle"/> Waiting for connection
+            <i className="fa fa-question-circle"/>
+              Waiting for connection
           </span>
         );
       }
@@ -122,9 +131,10 @@ class NodesComponent extends Component {
             <Button
               className="button-with-icon action-button new-credential-button"
               onClick={() => {
-                                    openAddAgentModal();
-                                }}
-            ><i className="fa fa-plus-circle" aria-hidden="true"/> New Agent
+              openAddAgentModal();
+            }}
+            ><i className="fa fa-plus-circle" aria-hidden="true"/>
+              New Agent
             </Button>
           </div>
         </div>
@@ -139,8 +149,9 @@ class NodesComponent extends Component {
                     <th>Status</th>
                     <th>Last online</th>
                     <th>Concurrency</th>
+                    <th>Tags</th>
                     <th>Enabled</th>
-                    <th />
+                    <th/>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,10 +161,10 @@ class NodesComponent extends Component {
             </Panel>
           </Col>
         </Row>
-      </div>);
+      </div>
+    );
   }
 }
-
 
 NodesComponent.propTypes = {
   agents: PropTypes.array.isRequired,
@@ -165,9 +176,7 @@ NodesComponent.propTypes = {
   updateEnabledPropertyForAgent: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  agents: getAllAgents(state),
-});
+const mapStateToProps = state => ({agents: getAllAgents(state)});
 
 export default connect(mapStateToProps, {
   openAddAgentModal,

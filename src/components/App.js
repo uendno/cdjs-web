@@ -19,6 +19,8 @@ import AgentsComponent from './agents/Agents';
 import NewAgentModal from './agents/new-agent-modal/NewAgentModal';
 import EditAgentModal from './agents/edit-agent-modal/EditAgentModal';
 import FilesComponent from './jobs/job/build/files/Files';
+import UsersComponent from './users/Users';
+import PermissionsComponent from './users/permissions/Permissions';
 // import {showError} from '../helpers/alert';
 
 
@@ -67,13 +69,15 @@ class App extends Component {
                 <div className="main-content">
                   <Switch>
                     <Route exact path="/" render={() => <Redirect to="/jobs"/>}/>
-                    <Route path="/jobs/:id/builds/:buildId/files" component={FilesComponent} />
-                    <Route path="/jobs/:id/builds/:buildId" component={BuildComponent}/>
-                    <Route path="/jobs/:id/edit" component={EditJobComponent}/>
-                    <Route path="/jobs/:id" component={JobComponent}/>
+                    <Route exact path="/jobs/:id/builds/:buildId/files" component={FilesComponent} />
+                    <Route exact path="/jobs/:id/builds/:buildId" component={BuildComponent}/>
+                    <Route exact path="/jobs/:id/edit" component={EditJobComponent}/>
+                    <Route exact path="/jobs/:id" component={JobComponent}/>
                     <Route exact path="/jobs" component={JobsComponent}/>
                     <Route exact path="/credentials" component={CredentialsComponent}/>
                     <Route exact path="/agents" component={AgentsComponent}/>
+                    <Route exact path="/users" component={UsersComponent}/>
+                    <Route exact path="/users/:userId/permissions" component={PermissionsComponent} />
                     <Route component={NotFoundComponent}/>
                   </Switch>
                 </div>

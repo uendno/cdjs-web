@@ -4,7 +4,7 @@ import {
   GET_BUILD_DETAILS_COMPLETE,
   UPDATE_JOB_BUILD_DATA,
   DELETE_JOB_COMPLETE,
-  CREATE_BUILD,
+  CREATE_BUILD_COMPLETE,
 
 } from '../actions/types';
 
@@ -81,9 +81,10 @@ const builds = (state = initialState, action) => {
       };
     }
 
-    case CREATE_BUILD:
+    case CREATE_BUILD_COMPLETE:
     case UPDATE_JOB_BUILD_DATA: {
-      addOrUpdateBuildIfNeeded(action.build, action.jobId, true);
+      const build = action.data;
+      addOrUpdateBuildIfNeeded(build, build.job, true);
 
       return {
         ...state,

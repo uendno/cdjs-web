@@ -34,11 +34,25 @@ const _checkIfCredentialExists = _.throttle(async (name, currentCredentialId, ch
   trailing: true,
 });
 
-
 class EditCredentialModal extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      _id: null,
+      invalidNameMessage: '',
+      name: '',
+      type: 'username/password',
+      data: {},
+      loading: false,
+      mode: 'create',
+      show: false,
+    };
+  }
+
   _renderNameInputGroup() {
-    const {modalData} = this.props;
-    const {invalidNameMessage, name} = modalData;
+    // const {modalData} = this.props;
+    const {invalidNameMessage, name} = this.state;
 
     return (
       <FormGroup
@@ -61,15 +75,14 @@ class EditCredentialModal extends Component {
   }
 
   _renderCredentialTypeFormGroup() {
-    const {modalData, updateBeingEditedCredential} = this.props;
-    const {type} = modalData;
+    const {type} = this.state;
 
     return (
       <FormGroup>
         <ControlLabel>Credential type</ControlLabel>
         <ButtonToolbar>
           <DropdownButton title={this._getCredentialTypeTitle(type)} id="dropdown-size-medium">
-            <MenuItem eventKey="1" onClick={() => updateBeingEditedCredential({type: 'username/password'})}>Username/password</MenuItem>
+            <MenuItem eventKey="1" onClick={() => this.setState({type: 'username/password'})}>Username/password</MenuItem>
           </DropdownButton>
         </ButtonToolbar>
       </FormGroup>
@@ -77,8 +90,7 @@ class EditCredentialModal extends Component {
   }
 
   _renderCredentialData() {
-    const {modalData} = this.props;
-    const {type} = modalData;
+    const {type} = this.setState;
 
     switch (type) {
       case 'username/password': {
@@ -91,8 +103,7 @@ class EditCredentialModal extends Component {
   }
 
   _renderUsernamePasswordCredentialData() {
-    const {modalData, updateBeingEditedCredential} = this.props;
-    const {data} = modalData;
+    const {data} = this.state;
     return (
       <Row>
         <Col md={6}>
@@ -103,13 +114,13 @@ class EditCredentialModal extends Component {
               id="username-input"
               value={data.username || ''}
               onChange={(e) => {
-                                         updateBeingEditedCredential({
-                                             data: {
-                                                 ...data,
-                                                 username: e.target.value,
-                                             },
-                                         });
-                                     }}
+                          this.setState({
+                              data: {
+                                  ...data,
+                                  username: e.target.value,
+                              },
+                          });
+                        }}
             />
           </FormGroup>
         </Col>
@@ -119,12 +130,12 @@ class EditCredentialModal extends Component {
             <FormControl
               type="password"
               value={data.password || ''}
-              onChange={e => updateBeingEditedCredential({
-                                         data: {
-                                             ...data,
-                                             password: e.target.value,
-                                         },
-                                     })}
+              onChange={e => this.setState({
+                            data: {
+                                ...data,
+                                password: e.target.value,
+                            },
+                        })}
             />
           </FormGroup>
         </Col>
@@ -142,36 +153,44 @@ class EditCredentialModal extends Component {
   }
 
   _handleNameInputChange(e) {
-    const {checkCredentialName, updateBeingEditedCredential, modalData} = this.props;
+    const {checkCredentialName} = this.props;
+    const {_id} = this.state;
     const name = e.target.value;
 
-    updateBeingEditedCredential({
+    this.setState({
       name,
       invalidNameMessage: '',
       loading: true,
     });
 
+    _checkIfCredentialExists(name, _id, checkCredentialName, (result) => {
+      this.setState({
+        loading: false,
+      });
 
-    _checkIfCredentialExists(name, modalData._id, checkCredentialName, (result) => {
-      updateBeingEditedCredential({loading: false});
       if (result.valid === false) {
-        updateBeingEditedCredential({
+        this.setState({
+          loading: false,
           invalidNameMessage: 'A credential with this name already exists',
+        });
+      } else {
+        this.setState({
+          loading: false,
         });
       }
     });
   }
 
   async _handleCreateCredential() {
-    const {requestCreateCredential, updateBeingEditedCredential, modalData, requestUpdateCredential} = this.props;
-    const {name, type, data, mode, _id} = modalData;
+    const {requestCreateCredential, requestUpdateCredential} = this.props;
+    const {name, type, data, mode, _id} = this.state;
 
     if (name.trim() === '') {
-      updateBeingEditedCredential({
+      this.setState({
         invalidNameMessage: 'Credential name must not be null',
       });
     } else {
-      updateBeingEditedCredential({
+      this.setState({
         loading: true,
       });
 
@@ -185,7 +204,7 @@ class EditCredentialModal extends Component {
         });
       }
 
-      updateBeingEditedCredential({
+      this.setState({
         loading: false,
       });
 
@@ -194,7 +213,7 @@ class EditCredentialModal extends Component {
   }
 
   _close() {
-    const {closeCreateCredentialModal} = this.props;
+    // const {closeCreateCredentialModal} = this.props;
     closeCreateCredentialModal();
   }
 

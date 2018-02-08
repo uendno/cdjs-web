@@ -62,7 +62,6 @@ const jobs = (state = {
       };
     }
 
-    case CREATE_BUILD:
     case CREATE_BUILD_COMPLETE: {
       const build = action.data;
 

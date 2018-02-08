@@ -35,7 +35,7 @@ class NavComponent extends Component {
           {this._renderLink('/jobs', 'Jobs', <i className="fa fa-server nav-item-icon" aria-hidden="true"/>)}
           {this._renderLink('/credentials', 'Credentials', <i className="fa fa-lock nav-item-icon" aria-hidden="true"/>)}
           {this._renderLink('/agents', 'Agents', <i className="fa fa-sitemap nav-item-icon" aria-hidden="true"/>)}
-          {this._renderLink('/settings', 'Settings')}
+          {this._renderLink('/users', 'Users', <i className="fa fa-users nav-item-icon" aria-hidden="true" />)}
         </div>
       </div>
     );

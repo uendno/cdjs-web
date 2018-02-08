@@ -9,6 +9,8 @@ import auth, * as fromAuth from './auth';
 import agents, * as fromAgents from './agents';
 import editAgent, * as fromEditAgent from './editAgent';
 import files from './files';
+import users, * as fromUsers from './users';
+import permissions, * as fromPermissions from './permissions';
 
 const app = combineReducers({
   jobs,
@@ -21,6 +23,8 @@ const app = combineReducers({
   agents,
   editAgent,
   files,
+  users,
+  permissions,
 });
 
 export default app;
@@ -84,6 +88,17 @@ export const getEditAgentData = state => state.editAgent;
 
 export const getDataForEditAgentNameFormComponent = state => fromEditAgent.getDataForEditNameForm(state.editAgent);
 
+
 // files
 
 export const getFileTree = state => state.files;
+
+
+// users
+
+export const getAllUsers = state => fromUsers.getAllUsers(state.users);
+
+
+// permissions
+
+export const getPermissionsForAnUser = (state, userId) => fromPermissions.getPermissionsForAnUser(state.permissions, userId);

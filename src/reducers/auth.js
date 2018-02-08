@@ -14,10 +14,11 @@ if (initialState.accessToken) {
 const auth = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_COMPLETE: {
-      const decoded = jwt.decode(action.accessToken);
-
+      const accessToken = action.data;
+      const decoded = jwt.decode(accessToken);
+      localStorageSrv.set('accessToken', accessToken);
       return {
-        accessToken: action.accessToken,
+        accessToken,
         decoded,
       };
     }
