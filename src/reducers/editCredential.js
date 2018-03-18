@@ -1,20 +1,19 @@
-import {
-  EDIT_CREDENTIAL_START, EDIT_CREDENTIAL_CLOSE, UPDATE_BEING_EDITED_CREDENTIAL,
-} from '../actions/types';
+import {EDIT_CREDENTIAL_START, EDIT_CREDENTIAL_CLOSE, UPDATE_BEING_EDITED_CREDENTIAL} from '../constants/actions';
 
 const initialState = {
   _id: null,
-  invalidNameMessage: '',
   name: '',
+  invalidNameMessage: '',
+  loading: false,
   type: 'username/password',
   data: {},
-  loading: false,
   mode: 'create',
 };
 
 const editCredentialModal = (state = initialState, action) => {
   switch (action.type) {
-    case EDIT_CREDENTIAL_START: {
+    case EDIT_CREDENTIAL_START:
+    {
       if (action.credential) {
         return {
           ...initialState,
@@ -31,11 +30,15 @@ const editCredentialModal = (state = initialState, action) => {
       };
     }
 
-    case EDIT_CREDENTIAL_CLOSE: {
-      return {...initialState};
+    case EDIT_CREDENTIAL_CLOSE:
+    {
+      return {
+        ...initialState,
+      };
     }
 
-    case UPDATE_BEING_EDITED_CREDENTIAL: {
+    case UPDATE_BEING_EDITED_CREDENTIAL:
+    {
       return {
         ...state,
         ...action.data,

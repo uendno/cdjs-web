@@ -7,7 +7,9 @@ import './BuildProgress.css';
 
 class BuildProgressComponent extends Component {
   _getPercentage(stages) {
-    const nSuccess = stages.filter(s => s.status === 'success').length;
+    const nSuccess = stages
+      .filter(s => s.status === 'success')
+      .length;
     return Math.round(((nSuccess + 1) * 100) / stages.length);
   }
 
@@ -23,8 +25,7 @@ class BuildProgressComponent extends Component {
       case 'pending':
         return (
           <div className="build-progress-component">
-            <ProgressBar bsStyle="warning" now={100} label="Pending..."/>
-            {includeDescription && <p className="description">Waiting in the queue...</p>}
+            <ProgressBar bsStyle="warning" now={100} label="Pending..."/> {includeDescription && <p className="description">Waiting in the queue...</p>}
           </div>
         );
       case 'preparing':
@@ -35,16 +36,15 @@ class BuildProgressComponent extends Component {
               bsStyle="warning"
               active
               label="Preparing..."
-              now={100}
-            />
-            {includeDescription && <p className="description">Preparing for the build...</p>}
+              now={100}/> {includeDescription && <p className="description">Preparing for the build...</p>}
           </div>
         );
       case 'building':
         return (
           <div className="build-progress-component">
             <ProgressBar active now={this._getPercentage(build.stages)}/>
-            <p className="description"> {includeDescription && `Current stage: ${this._getCurrentStageName(build.stages)}`}</p>
+            <p className="description">
+              {includeDescription && `Current stage: ${this._getCurrentStageName(build.stages)}`}</p>
           </div>
         );
 
@@ -55,38 +55,36 @@ class BuildProgressComponent extends Component {
               className="build-progress"
               bsStyle="success"
               label="Passed"
-              now={100}
-            />
-            {includeDescription &&
-            <p className="description">
-                            Duration: {moment.duration(moment(build.doneAt).diff(moment(build.startAt))).format('h[h] m[m] s[s]')}
+              now={100}/> {includeDescription && <p className="description">
+              Duration: {moment
+                .duration(moment(build.doneAt).diff(moment(build.startAt)))
+                .format('h[h] m[m] s[s]')}
             </p>}
           </div>
         );
 
-      case 'failed': {
-        let failedStage;
+      case 'failed':
+        {
+          let failedStage;
 
-        if (build.stages.length === 0) {
-          failedStage = 'prepare';
-        } else {
-          const found = build.stages.find(s => s.status === 'failed');
-          failedStage = found && found.name;
+          if (build.stages.length === 0) {
+            failedStage = 'prepare';
+          } else {
+            const found = build
+              .stages
+              .find(s => s.status === 'failed');
+            failedStage = found && found.name;
+          }
+
+          return (
+            <div className="build-progress-component">
+              <ProgressBar now={100} bsStyle="danger" label="Failed"/> {includeDescription && <p className="description">Failed at:
+                <Link to={`/jobs/${build.jobId}/builds/${build._id}`}>{failedStage}
+                </Link>
+              </p>}
+            </div>
+          );
         }
-
-        return (
-          <div className="build-progress-component">
-            <ProgressBar now={100} bsStyle="danger" label="Failed"/>
-            {includeDescription &&
-            <p className="description">Failed at:
-            <Link
-              to={`/jobs/${build.jobId}/builds/${build._id}`}
-            >{failedStage}
-            </Link>
-            </p>}
-          </div>
-        );
-      }
 
       default:
         return null;
@@ -96,8 +94,7 @@ class BuildProgressComponent extends Component {
 
 BuildProgressComponent.propTypes = {
   build: PropTypes.object.isRequired,
-  includeDescription: PropTypes.bool.isRequired,
+  includeDescription: PropTypes.bool.isRequired
 };
 
 export default BuildProgressComponent;
-

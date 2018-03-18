@@ -1,16 +1,19 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {Row, Col, Panel, Table, Button} from 'react-bootstrap';
 import {withRouter} from 'react-router';
 import PropTypes from 'prop-types';
-import {requestAllUsers} from '../../actions/users';
-import {getAllUsers} from '../../reducers';
+import {requestAllUsers, openEditUserModal, openAddUserModal, requestDeleteUser} from '../../actions/users';
+import {getAllUsers, getUserInfo} from '../../reducers';
 import './Users.css';
 
 class Users extends Component {
   static propTypes = {
     users: PropTypes.array.isRequired,
     requestAllUsers: PropTypes.func.isRequired,
+    openEditUserModal: PropTypes.func.isRequired,
+    userInfo: PropTypes.object.isRequired,
+    requestDeleteUser: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
@@ -20,34 +23,43 @@ class Users extends Component {
   }
 
   _renderUser(user) {
-    const {history} = this.props;
+    const {userInfo, openEditUserModal, requestDeleteUser} = this.props;
+    const role = userInfo.role;
 
     return (
       <tr key={user._id}>
         <td>{user.email}</td>
         <td>{user.role}</td>
         <td>
-          <Button
-            className="action-button"
-            onClick={() => {
-              history.push(`/users/${user._id}/permissions`);
+          {
+            role === 'admin' &&
+            <Button
+              className="action-button"
+              onClick={() => {
+                openEditUserModal(user._id, user.email, user.role);
+              }}
+            ><i className="fa fa-pencil" aria-hidden="true"/>
+            </Button>
+          }
+          {
+            role === 'admin' &&
+            <Button
+              className="action-button red"
+              onClick={() => {
+              if (window.confirm('Are you sure want to delete this user?')) {
+                requestDeleteUser(user._id);
+              }
             }}
-          >View permissions
-          </Button>
-          <Button className="action-button" onClick={() => {}}><i className="fa fa-pencil" aria-hidden="true"/>
-          </Button>
-          <Button
-            className="action-button red"
-            onClick={() => {}}
-          ><i className="fa fa-trash-o" aria-hidden="true"/>
-          </Button>
+            ><i className="fa fa-trash-o" aria-hidden="true"/>
+            </Button>
+          }
         </td>
       </tr>
     );
   }
 
   render() {
-    const {users} = this.props;
+    const {users, openAddUserModal} = this.props;
 
     return (
       <div className="users-component">
@@ -59,8 +71,8 @@ class Users extends Component {
             <Button
               className="button-with-icon action-button new-credential-button"
               onClick={() => {
-
-            }}
+                openAddUserModal();
+              }}
             ><i className="fa fa-plus-circle" aria-hidden="true"/>
               New User
             </Button>
@@ -80,7 +92,7 @@ class Users extends Component {
                 <tbody>
                   {users.map(this._renderUser.bind(this))}
                 </tbody>
-                <tbody />
+                <tbody/>
               </Table>
             </Panel>
           </Col>
@@ -92,8 +104,12 @@ class Users extends Component {
 
 const mapStateToProps = state => ({
   users: getAllUsers(state),
+  userInfo: getUserInfo(state),
 });
 
 export default withRouter(connect(mapStateToProps, {
   requestAllUsers,
+  openEditUserModal,
+  openAddUserModal,
+  requestDeleteUser,
 })(Users));

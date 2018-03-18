@@ -23,7 +23,10 @@ class CreateJobModalComponent extends Component {
     const {show, hideCreateJobModal, newJobAbleToBeCreated} = this.props;
 
     return (
-      <Modal className="edit-credential-modal-component" show={show} onHide={hideCreateJobModal}>
+      <Modal
+        className="edit-credential-modal-component"
+        show={show}
+        onHide={hideCreateJobModal}>
         <Modal.Header closeButton>
           <Modal.Title>Create new credential</Modal.Title>
         </Modal.Header>
@@ -41,9 +44,10 @@ class CreateJobModalComponent extends Component {
           </Button>
           <Button
             bsStyle="primary"
-            onClick={this._handleCreateJob.bind(this)}
-            disabled={!newJobAbleToBeCreated}
-          >Create
+            onClick={this
+            ._handleCreateJob
+            .bind(this)}
+            disabled={!newJobAbleToBeCreated}>Create
           </Button>
         </Modal.Footer>
       </Modal>
@@ -55,16 +59,9 @@ CreateJobModalComponent.propTypes = {
   show: PropTypes.bool.isRequired,
   newJobAbleToBeCreated: PropTypes.bool.isRequired,
   hideCreateJobModal: PropTypes.func.isRequired,
-  requestCreateJob: PropTypes.func.isRequired,
+  requestCreateJob: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-  show: checkIfShouldShowCreateJobModal(state),
-  newJobAbleToBeCreated: checkIfNewJobAbleToBeCreated(state),
-});
+const mapStateToProps = state => ({show: checkIfShouldShowCreateJobModal(state), newJobAbleToBeCreated: checkIfNewJobAbleToBeCreated(state)});
 
-export default withRouter(connect(mapStateToProps, {
-  hideCreateJobModal,
-  requestCreateJob,
-})(CreateJobModalComponent));
-
+export default withRouter(connect(mapStateToProps, {hideCreateJobModal, requestCreateJob})(CreateJobModalComponent));

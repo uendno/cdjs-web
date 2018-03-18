@@ -1,10 +1,4 @@
-import {
-  GET_BUILD_DETAILS,
-  READ_LOG,
-  CANCEL_READ_LOG,
-  CREATE_BUILD,
-  GET_FILES,
-} from './types';
+import {GET_BUILD_DETAILS, READ_LOG, CANCEL_READ_LOG, CREATE_BUILD, GET_FILES} from '../constants/actions';
 import * as socketSrv from '../services/socket';
 import {get, post} from '../helpers/api';
 
@@ -27,9 +21,7 @@ export const cancelReadLogs = () => {
 
 export const requestCreateBuild = async jobId => ({
   type: CREATE_BUILD,
-  func: () => post('/builds', {
-    jobId,
-  }),
+  func: () => post('/builds', {jobId}),
 });
 
 export const requestFileList = async buildId => ({

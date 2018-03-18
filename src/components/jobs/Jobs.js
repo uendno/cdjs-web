@@ -13,7 +13,6 @@ import CreateJobModalComponent from './create-job-modal/CreateJobModal';
 import BuildProgressComponent from './build-progress/BuildProgress';
 import CommitInfoComponent from './commit-info/CommitInfo';
 
-
 class HomeComponent extends Component {
   componentDidMount() {
     const {requestAllJobs} = this.props;
@@ -35,8 +34,7 @@ class HomeComponent extends Component {
           </Link>
         </td>
         <td className="col-md-3">
-          <CommitInfoComponent build={job.lastBuild}/>
-          {lastBuild && moment(lastBuild.startAt).calendar()}
+          <CommitInfoComponent build={job.lastBuild}/> {lastBuild && moment(lastBuild.startAt).calendar()}
         </td>
         <td className="build-progress-cell col-md-3">
           <BuildProgressComponent build={lastBuild || {}} includeDescription/>
@@ -56,15 +54,13 @@ class HomeComponent extends Component {
         <Button
           className="action-button"
           onClick={() => requestCreateBuild(job._id)}
-          disabled={job.status !== 'active'}
-        ><i className="fa fa-play" aria-hidden="true"/>
+          disabled={job.status !== 'active'}><i className="fa fa-play" aria-hidden="true"/>
         </Button>
         <Button
           className="action-button"
           onClick={() => {
-                            history.push(`/jobs/${job._id}/edit`);
-                        }}
-        ><i className="fa fa-cog" aria-hidden="true"/>
+          history.push(`/jobs/${job._id}/edit`);
+        }}><i className="fa fa-cog" aria-hidden="true"/>
         </Button>
       </div>
     );
@@ -78,7 +74,9 @@ class HomeComponent extends Component {
         return <i className="fa fa-clock-o status-icon" aria-hidden="true"/>;
       case 'preparing':
       case 'building':
-        return <i className="fa fa-circle-o-notch fa-spin status-icon building" aria-hidden="true"/>;
+        return <i
+          className="fa fa-circle-o-notch fa-spin status-icon building"
+          aria-hidden="true"/>;
       case 'success':
         return <i className="fa fa-check status-icon success" aria-hidden="true"/>;
       default:
@@ -96,10 +94,8 @@ class HomeComponent extends Component {
             <span className="page-title">Jobs</span>
           </div>
           <div className="action-buttons">
-            <Button
-              className="button-with-icon action-button"
-              onClick={showCreateJobModal}
-            ><i className="fa fa-plus-circle" aria-hidden="true"/> New Job
+            <Button className="button-with-icon action-button" onClick={showCreateJobModal}><i className="fa fa-plus-circle" aria-hidden="true"/>
+              New Job
             </Button>
           </div>
 
@@ -113,8 +109,8 @@ class HomeComponent extends Component {
                     <th>Status</th>
                     <th>Name</th>
                     <th>Last build</th>
-                    <th />
-                    <th />
+                    <th/>
+                    <th/>
                   </tr>
                 </thead>
                 <tbody>
@@ -136,15 +132,9 @@ HomeComponent.propTypes = {
   requestAllJobs: PropTypes.func.isRequired,
   jobs: PropTypes.array.isRequired,
   requestCreateBuild: PropTypes.func.isRequired,
-  showCreateJobModal: PropTypes.func.isRequired,
+  showCreateJobModal: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-  jobs: getAllJobs(state),
-});
+const mapStateToProps = state => ({jobs: getAllJobs(state)});
 
-export default withRouter(connect(mapStateToProps, {
-  requestAllJobs,
-  requestCreateBuild,
-  showCreateJobModal,
-})(HomeComponent));
+export default withRouter(connect(mapStateToProps, {requestAllJobs, requestCreateBuild, showCreateJobModal})(HomeComponent));

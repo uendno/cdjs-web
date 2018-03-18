@@ -1,4 +1,4 @@
-import {GET_FILES, GET_FILES_COMPLETE} from '../actions/types';
+import {GET_FILES, GET_FILES_COMPLETE} from '../constants/actions';
 
 const initialState = {};
 

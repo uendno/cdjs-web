@@ -6,7 +6,7 @@ import {
   SHOW_CREATE_JOB_MODAL,
   HIDE_CREATE_JOB_MODAL,
   UPDATE_EDIT_JOB_MODAL_DATA,
-} from '../actions/types';
+} from '../constants/actions';
 
 const initialState = {
   _id: null,

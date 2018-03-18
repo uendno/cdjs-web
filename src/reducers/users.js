@@ -1,4 +1,4 @@
-import {GET_ALL_USERS_COMPLETE} from '../actions/types';
+import {GET_ALL_USERS_COMPLETE, UPDATE_USER_COMPLETE, CREATE_USER_COMPLETE, DELETE_USER_COMPLETE} from '../constants/actions';
 
 const initialState = {
   byId: {},
@@ -7,7 +7,8 @@ const initialState = {
 
 const users = (state = initialState, action) => {
   switch (action.type) {
-    case GET_ALL_USERS_COMPLETE: {
+    case GET_ALL_USERS_COMPLETE:
+    {
       const users = action.data;
       const byId = {};
       const ids = [];
@@ -17,11 +18,36 @@ const users = (state = initialState, action) => {
         ids.push(user._id);
       });
 
+      return {byId, ids};
+    }
+
+    case UPDATE_USER_COMPLETE: {
+      const byId = {...state.byId};
+      const user = action.data;
+      byId[user._id] = user;
+
       return {
+        ...state,
         byId,
-        ids,
       };
     }
+
+    case CREATE_USER_COMPLETE: {
+      const byId = {...state.byId};
+      const user = action.data;
+      byId[user._id] = user;
+
+      return {
+        ...state,
+        byId,
+        ids: [...state.ids, user._id],
+      };
+    }
+
+    case DELETE_USER_COMPLETE: {
+      const byId = {...state.byId}.omit;
+    }
+
     default:
       return state;
   }
@@ -29,4 +55,6 @@ const users = (state = initialState, action) => {
 
 export default users;
 
-export const getAllUsers = state => state.ids.map(id => state.byId[id]);
+export const getAllUsers = state => state
+  .ids
+  .map(id => state.byId[id]);

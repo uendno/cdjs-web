@@ -11,10 +11,9 @@ import {
   UPDATE_EDIT_AGENT_MODAL_DATA,
   EDIT_AGENT_IMMEDIATELY,
   DELETE_AGENT,
-} from './types';
+} from '../constants/actions';
 import {getEditAgentData, getAgentById} from '../reducers';
 import {get, del, post, put} from '../helpers/api';
-
 
 export const openAddAgentModal = () => ({type: OPEN_ADD_AGENT_MODAL});
 
@@ -50,9 +49,7 @@ export const requestAllAgents = async() => ({
 
 export const updateEnabledPropertyForAgent = async(id, value) => ({
   type: UPDATE_AGENT,
-  func: () => put(`/agents/${id}`, {
-    enabled: value,
-  }),
+  func: () => put(`/agents/${id}`, {enabled: value}),
 });
 
 export const editAgentImmediately = (id, data) => ({type: EDIT_AGENT_IMMEDIATELY, id, data});

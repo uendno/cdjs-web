@@ -1,0 +1,32 @@
+.build-configuration-component {
+  padding-top: 32px; 
+
+  .tag-delete-button {
+    color: white;
+    margin-left: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .badge {
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+
+  .tag {
+    font-size: 14px;
+    padding: 5px 9px;
+  }
+
+  .ReactTags__tagInput {
+    display: inline;
+
+    .tag-input {
+      margin-bottom: 8px;
+      position: relative;
+      bottom: 3px;
+      display: inline-block;
+      width: 150px;
+    }
+  }
+}

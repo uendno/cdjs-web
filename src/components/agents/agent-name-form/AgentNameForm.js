@@ -7,14 +7,12 @@ import './AgentNameForm.css';
 import {getDataForEditAgentNameFormComponent} from '../../../reducers';
 import {updateEditAgentModalData, updateBeingEditedAgent, checkAgentName} from '../../../actions/agents';
 
-
-const _checkIfAgentNameExists = _.throttle(async (name, currentAgentId, checkAgentName, onDone) => {
+const _checkIfAgentNameExists = _.throttle(async(name, currentAgentId, checkAgentName, onDone) => {
   const result = await checkAgentName(name, currentAgentId);
   onDone(result);
-},
-500, {
+}, 500, {
   leading: false,
-  trailing: true,
+  trailing: true
 });
 
 class AgentNameForm extends Component {
@@ -28,14 +26,10 @@ class AgentNameForm extends Component {
 
     _checkIfAgentNameExists(name, null, checkAgentName, (result) => {
       if (!result.valid) {
-        updateEditAgentModalData({
-          invalidNameMessage: 'An credential with this name already exists',
-        });
+        updateEditAgentModalData({invalidNameMessage: 'An credential with this name already exists'});
       }
 
-      updateEditAgentModalData({
-        loading: false,
-      });
+      updateEditAgentModalData({loading: false});
     });
   }
 
@@ -43,13 +37,13 @@ class AgentNameForm extends Component {
     const {data, disabled} = this.props;
     const {name, invalidNameMessage} = data;
 
-
     return (
       <div className="agent-name-form-component">
         <FormGroup
           controlId="agent-name-input"
-          validationState={invalidNameMessage !== '' ? 'error' : null}
-        >
+          validationState={invalidNameMessage !== ''
+          ? 'error'
+          : null}>
           <ControlLabel>Agent name</ControlLabel>
           <FormControl
             type="text"
@@ -57,8 +51,9 @@ class AgentNameForm extends Component {
             placeholder="Enter a unique name"
             value={name || ''}
             disabled={disabled}
-            onChange={this._handleNameInputChange.bind(this)}
-          />
+            onChange={this
+            ._handleNameInputChange
+            .bind(this)}/>
           <FormControl.Feedback/>
           <HelpBlock>{invalidNameMessage}</HelpBlock>
         </FormGroup>
@@ -73,15 +68,9 @@ AgentNameForm.propTypes = {
   updateEditAgentModalData: PropTypes.func.isRequired,
   updateBeingEditedAgent: PropTypes.func.isRequired,
   checkAgentName: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
+  disabled: PropTypes.bool
 };
 
-const mapStateToProps = state => ({
-  data: getDataForEditAgentNameFormComponent(state),
-});
+const mapStateToProps = state => ({data: getDataForEditAgentNameFormComponent(state)});
 
-export default connect(mapStateToProps, {
-  updateEditAgentModalData,
-  updateBeingEditedAgent,
-  checkAgentName,
-})(AgentNameForm);
+export default connect(mapStateToProps, {updateEditAgentModalData, updateBeingEditedAgent, checkAgentName})(AgentNameForm);

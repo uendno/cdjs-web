@@ -1,12 +1,5 @@
 import _ from 'lodash';
-import {
-  GET_ALL_JOBS_COMPLETE,
-  GET_JOB_DETAILS_COMPLETE,
-  CREATE_BUILD_COMPLETE,
-  CREATE_BUILD,
-  DELETE_JOB_COMPLETE,
-} from '../actions/types';
-
+import {GET_ALL_JOBS_COMPLETE, GET_JOB_DETAILS_COMPLETE, CREATE_BUILD_COMPLETE, CREATE_BUILD, DELETE_JOB_COMPLETE} from '../constants/actions';
 
 const jobs = (state = {
   byId: {},
@@ -15,9 +8,10 @@ const jobs = (state = {
   const ids = [];
   const byId = {};
 
-
   const addOrUpdateJobIfNeeded = (job) => {
-    let clone = {...job};
+    let clone = {
+      ...job,
+    };
 
     if (clone.lastBuild) {
       clone.lastBuild = clone.lastBuild._id;
@@ -38,7 +32,8 @@ const jobs = (state = {
   };
 
   switch (action.type) {
-    case GET_ALL_JOBS_COMPLETE: {
+    case GET_ALL_JOBS_COMPLETE:
+    {
       const jobs = action.data;
 
       jobs.forEach((job) => {
@@ -52,7 +47,8 @@ const jobs = (state = {
       };
     }
 
-    case GET_JOB_DETAILS_COMPLETE: {
+    case GET_JOB_DETAILS_COMPLETE:
+    {
       addOrUpdateJobIfNeeded(action.data);
 
       return {
@@ -62,13 +58,17 @@ const jobs = (state = {
       };
     }
 
-    case CREATE_BUILD_COMPLETE: {
+    case CREATE_BUILD_COMPLETE:
+    {
       const build = action.data;
 
       //eslint-disable-next-line
-      const job = getJob(state, build.job);
+        const job = getJob(state, build.job);
 
-      addOrUpdateJobIfNeeded({...job, lastBuild: build});
+      addOrUpdateJobIfNeeded({
+        ...job,
+        lastBuild: build,
+      });
 
       return {
         ...state,
@@ -77,10 +77,13 @@ const jobs = (state = {
       };
     }
 
-    case DELETE_JOB_COMPLETE: {
+    case DELETE_JOB_COMPLETE:
+    {
       const id = action.identity;
 
-      const byId = {...state.byId};
+      const byId = {
+        ...state.byId,
+      };
       const ids = [...state.ids].filter(i => i !== id);
 
       byId[id] = null;
@@ -92,7 +95,6 @@ const jobs = (state = {
       };
     }
 
-
     default:
       return state;
   }
@@ -100,7 +102,8 @@ const jobs = (state = {
 
 export default jobs;
 
-
-export const getAllJobs = state => state.ids.map(id => state.byId[id]);
+export const getAllJobs = state => state
+  .ids
+  .map(id => state.byId[id]);
 
 export const getJob = (state, id) => state.byId[id];

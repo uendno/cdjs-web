@@ -14,15 +14,14 @@ class DangerZone extends Component {
       <div className="danger-zone-component">
         <Button
           className="button-with-icon action-button delete-job-button"
-          onClick={async () => {
-                            if (window.confirm('Are you sure want to delete this job?')) {
-                                const result = await requestDeleteJob(match.params.id);
-
-                                if (result) {
-                                    history.replace('/jobs');
-                                }
-                            }
-                        }}
+          onClick={async() => {
+          if (window.confirm('Are you sure want to delete this job?')) {
+            const result = await requestDeleteJob(match.params.id);
+            if (result) {
+              history.replace('/jobs');
+            }
+          }
+        }}
         ><i className="fa fa-trash-o" aria-hidden="true"/>Delete Job
         </Button>
       </div>
@@ -34,6 +33,4 @@ DangerZone.propTypes = {
   requestDeleteJob: PropTypes.func.isRequired,
 };
 
-export default withRouter(connect(null, {
-  requestDeleteJob,
-})(DangerZone));
+export default withRouter(connect(null, {requestDeleteJob})(DangerZone));

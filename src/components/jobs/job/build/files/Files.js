@@ -12,7 +12,9 @@ class FilesComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onToggle = this.onToggle.bind(this);
+    this.onToggle = this
+      .onToggle
+      .bind(this);
   }
 
   componentDidMount() {
@@ -33,10 +35,10 @@ class FilesComponent extends Component {
     this.setState({cursor: node});
   }
 
-
   _renderLabel(node) {
     return (
-      <span key={node.name} className="node"><a href={node.downloadUrl} target="_blank">{node.name}</a><br/></span>
+      <span key={node.name} className="node">
+        <a href={node.downloadUrl} target="_blank">{node.name}</a><br/></span>
     );
   }
 
@@ -44,7 +46,9 @@ class FilesComponent extends Component {
     if (node.children) {
       return (
         <TreeView key={node.name} nodeLabel={this._renderLabel(node)} defaultCollapsed>
-          {node.children.map(child => this._renderTree(child))}
+          {node
+            .children
+            .map(child => this._renderTree(child))}
         </TreeView>
       );
     }
@@ -56,7 +60,11 @@ class FilesComponent extends Component {
 
     return (
       <div className="files-component">
-        {data.children ? data.children.map(child => this._renderTree(child)) : null}
+        {data.children
+          ? data
+            .children
+            .map(child => this._renderTree(child))
+          : null}
       </div>
     );
   }
@@ -64,13 +72,9 @@ class FilesComponent extends Component {
 
 FilesComponent.propTypes = {
   data: Proptypes.object.isRequired,
-  requestFileList: Proptypes.func.isRequired,
+  requestFileList: Proptypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-  data: getFileTree(state),
-});
+const mapStateToProps = state => ({data: getFileTree(state)});
 
-export default withRouter(connect(mapStateToProps, {
-  requestFileList,
-})(FilesComponent));
+export default withRouter(connect(mapStateToProps, {requestFileList})(FilesComponent));

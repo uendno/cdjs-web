@@ -10,7 +10,7 @@ import {
   SHOW_CREATE_JOB_MODAL,
   HIDE_CREATE_JOB_MODAL,
   UPDATE_JOB,
-} from './types';
+} from '../constants/actions';
 import {get, post, put, del} from '../helpers/api';
 import {getDataForJobNameComponent, getEditJobData} from '../reducers';
 
@@ -77,6 +77,7 @@ export const saveBeingEditedJob = () => async(dispatch, getState) => {
     credential,
     cdFilePath,
     description,
+    agentTags,
   } = data;
 
   const messages = _validate(name, repoUrl);
@@ -95,6 +96,7 @@ export const saveBeingEditedJob = () => async(dispatch, getState) => {
     credential,
     description,
     cdFilePath,
+    agentTags,
   }));
 
   dispatch(updateEditJobModalData({loading: false}));

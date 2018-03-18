@@ -1,4 +1,5 @@
 import {combineReducers} from 'redux';
+import {LOGOUT_COMPLETE} from '../constants/actions';
 import jobs, * as fromJobs from './jobs';
 import credentials, * as fromCredentials from './credentials';
 import editCredentialModal from './editCredential';
@@ -11,6 +12,7 @@ import editAgent, * as fromEditAgent from './editAgent';
 import files from './files';
 import users, * as fromUsers from './users';
 import permissions, * as fromPermissions from './permissions';
+import editUser from './editUser';
 
 const app = combineReducers({
   jobs,
@@ -25,15 +27,26 @@ const app = combineReducers({
   files,
   users,
   permissions,
+  editUser,
 });
 
-export default app;
+const root = (state, action) => {
+  if (action.type === LOGOUT_COMPLETE) {
+    // eslint-disable-next-line
+    state = undefined;
+  }
+
+  return app(state, action);
+};
+
+
+export default root;
 
 
 // auth
 
 export const getAccessToken = state => fromAuth.getAccessToken(state.auth);
-
+export const getUserInfo = state => fromAuth.getUserInfo(state.auth);
 
 export const getJob = (state, id) => fromJobs.getJob(state.jobs, id);
 
@@ -97,7 +110,7 @@ export const getFileTree = state => state.files;
 // users
 
 export const getAllUsers = state => fromUsers.getAllUsers(state.users);
-
+export const getEditUserModalData = state => state.editUser;
 
 // permissions
 

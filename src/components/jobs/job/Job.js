@@ -21,9 +21,7 @@ class JobComponent extends Component {
   }
 
   _renderTime() {
-    return (
-      <div />
-    );
+    return (<div/>);
   }
 
   _handleCancel() {
@@ -38,8 +36,7 @@ class JobComponent extends Component {
           <Link to={`/jobs/${job._id}/builds/${build._id}`}>#{build.number}</Link>
         </Col>
         <Col md={3}>
-          <CommitInfoComponent build={build}/>
-          {build && moment(build.startAt).calendar()}
+          <CommitInfoComponent build={build}/> {build && moment(build.startAt).calendar()}
         </Col>
         <Col md={5}>
           <BuildProgressComponent build={build} includeDescription/>
@@ -62,8 +59,9 @@ class JobComponent extends Component {
           <div className="header-info">
             <Button
               className="button-with-icon no-text back-button"
-              onClick={this._handleCancel.bind(this)}
-            ><i className="fa fa-arrow-left" aria-hidden="true"/>
+              onClick={this
+              ._handleCancel
+              .bind(this)}><i className="fa fa-arrow-left" aria-hidden="true"/>
             </Button>
             <span className="page-title">{job.name}</span>
           </div>
@@ -71,14 +69,14 @@ class JobComponent extends Component {
             <Button
               className="button-with-icon play-job-button action-button"
               onClick={() => requestCreateBuild(job._id)}
-              disabled={job.status !== 'active'}
-            ><i className="fa fa-play" aria-hidden="true"/> Trigger a build
+              disabled={job.status !== 'active'}><i className="fa fa-play" aria-hidden="true"/>
+              Trigger a build
             </Button>
           </div>
         </div>
         <Row className="show-grid">
           <Col md={12}>
-            <Panel className="info-panel" />
+            <Panel className="info-panel"/>
             <Panel className="builds-panel">
               {builds.map((build, index) => this._renderBuild(job, build, index))}
             </Panel>
@@ -93,7 +91,7 @@ JobComponent.propTypes = {
   job: Proptypes.object.isRequired,
   builds: Proptypes.array.isRequired,
   requestJobDetails: Proptypes.func.isRequired,
-  requestCreateBuild: Proptypes.func.isRequired,
+  requestCreateBuild: Proptypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -101,11 +99,8 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     job: getJob(state, jobId) || {},
-    builds: getBuildsForJob(state, jobId),
+    builds: getBuildsForJob(state, jobId)
   };
 };
 
-export default withRouter(connect(mapStateToProps, {
-  requestJobDetails,
-  requestCreateBuild,
-})(JobComponent));
+export default withRouter(connect(mapStateToProps, {requestJobDetails, requestCreateBuild})(JobComponent));

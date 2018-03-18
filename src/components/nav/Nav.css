@@ -4,9 +4,10 @@
   background-color: #40455E;
   font-weight: bold; }
   .nav-component .nav-header {
-    height: 60px;
+    height: 100px;
     background-color: #565c80;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
@@ -14,6 +15,8 @@
     .nav-component .nav-header .app-name {
       font-size: 25px;
       font-weight: normal; }
+    .nav-component .nav-header .user-info {
+      margin-top: 8px; }
   .nav-component .nav-content .nav-item {
     width: 100%;
     height: 40px;

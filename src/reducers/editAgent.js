@@ -11,7 +11,7 @@ import {
   UPDATE_AGENT_COMPLETE,
   UPDATE_AGENT,
   UPDATE_AGENT_ERROR,
-} from '../actions/types';
+} from '../constants/actions';
 
 const initialState = {
   modal: {

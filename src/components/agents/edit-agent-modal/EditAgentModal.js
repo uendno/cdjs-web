@@ -35,7 +35,9 @@ class EditAgentModal extends Component {
       <Modal
         className="edit-agent-modal-component"
         show={show && mode === 'edit'}
-        onHide={() => closeEditAgentModal()}
+        onHide={() => {
+          closeEditAgentModal();
+        }}
       >
         <Modal.Header closeButton>
           <Modal.Title>Add new agent</Modal.Title>
@@ -51,10 +53,10 @@ class EditAgentModal extends Component {
                 id="agent-concurrent-builds-input"
                 value={numberOfConcurrentBuilds || 1}
                 onChange={(event) => {
-                            updateBeingEditedAgent({
-                                numberOfConcurrentBuilds: parseInt(event.target.value, 10),
-                            });
-                        }}
+                updateBeingEditedAgent({
+                  numberOfConcurrentBuilds: parseInt(event.target.value, 10),
+                });
+              }}
               />
               <FormControl.Feedback/>
             </FormGroup>
@@ -63,16 +65,19 @@ class EditAgentModal extends Component {
               <ControlLabel>Tags</ControlLabel>
               <ReactTags
                 classNames={{
-                                    tag: 'badge badge-dark tag',
-                                    remove: 'tag-delete-button',
-                                    tagInputField: 'form-control tag-input',
-                                }}
-                tags={tags ? tags.map((text, id) => ({
-                                    id,
-                                    text,
-                                })) : []}
-                handleDelete={this._handleDelete.bind(this)}
-                handleAddition={this._handleAddition.bind(this)}
+                tag: 'badge badge-dark tag',
+                remove: 'tag-delete-button',
+                tagInputField: 'form-control tag-input',
+              }}
+                tags={tags
+                ? tags.map((text, id) => ({id, text}))
+                : []}
+                handleDelete={this
+                ._handleDelete
+                .bind(this)}
+                handleAddition={this
+                ._handleAddition
+                .bind(this)}
               />
             </FormGroup>
           </div>
@@ -81,8 +86,8 @@ class EditAgentModal extends Component {
           <Button
             bsStyle="primary"
             onClick={() => {
-                                updateAgent();
-                            }}
+            updateAgent();
+          }}
             disabled={loading === true}
           >Save
           </Button>
@@ -99,12 +104,6 @@ EditAgentModal.propTypes = {
   updateBeingEditedAgent: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  data: getEditAgentData(state),
-});
+const mapStateToProps = state => ({data: getEditAgentData(state)});
 
-export default connect(mapStateToProps, {
-  closeEditAgentModal,
-  updateAgent,
-  updateBeingEditedAgent,
-})(EditAgentModal);
+export default connect(mapStateToProps, {closeEditAgentModal, updateAgent, updateBeingEditedAgent})(EditAgentModal);

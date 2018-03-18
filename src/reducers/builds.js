@@ -5,9 +5,7 @@ import {
   UPDATE_JOB_BUILD_DATA,
   DELETE_JOB_COMPLETE,
   CREATE_BUILD_COMPLETE,
-
-} from '../actions/types';
-
+} from '../constants/actions';
 
 const initialState = {
   byId: {},
@@ -16,7 +14,9 @@ const initialState = {
 
 const builds = (state = initialState, action) => {
   let ids = [...state.ids];
-  const byId = {...state.byId};
+  const byId = {
+    ...state.byId,
+  };
 
   const addOrUpdateBuildIfNeeded = (build, jobId, addToBeginning) => {
     byId[build._id] = {
@@ -27,7 +27,9 @@ const builds = (state = initialState, action) => {
 
     if (ids.indexOf(build._id) === -1) {
       if (addToBeginning) {
-        ids = [build._id, ...ids];
+        ids = [
+          build._id, ...ids,
+        ];
       } else {
         ids.push(build._id);
       }
@@ -36,16 +38,19 @@ const builds = (state = initialState, action) => {
 
   const addOrUpdateBuildsOfJob = (job) => {
     if (job.builds) {
-      job.builds.forEach((build) => {
-        addOrUpdateBuildIfNeeded(build, job._id);
-      });
+      job
+        .builds
+        .forEach((build) => {
+          addOrUpdateBuildIfNeeded(build, job._id);
+        });
     } else if (job.lastBuild) {
       addOrUpdateBuildIfNeeded(job.lastBuild, job._id);
     }
   };
 
   switch (action.type) {
-    case GET_ALL_JOBS_COMPLETE: {
+    case GET_ALL_JOBS_COMPLETE:
+    {
       const jobs = action.data;
 
       jobs.forEach((job) => {
@@ -59,7 +64,8 @@ const builds = (state = initialState, action) => {
       };
     }
 
-    case GET_JOB_DETAILS_COMPLETE: {
+    case GET_JOB_DETAILS_COMPLETE:
+    {
       const job = action.data;
       addOrUpdateBuildsOfJob(job);
 
@@ -70,7 +76,8 @@ const builds = (state = initialState, action) => {
       };
     }
 
-    case GET_BUILD_DETAILS_COMPLETE: {
+    case GET_BUILD_DETAILS_COMPLETE:
+    {
       const build = action.data;
       addOrUpdateBuildIfNeeded(build, build.job);
 
@@ -82,8 +89,10 @@ const builds = (state = initialState, action) => {
     }
 
     case CREATE_BUILD_COMPLETE:
-    case UPDATE_JOB_BUILD_DATA: {
+    case UPDATE_JOB_BUILD_DATA:
+    {
       const build = action.data;
+
       addOrUpdateBuildIfNeeded(build, build.job, true);
 
       return {
@@ -93,10 +102,13 @@ const builds = (state = initialState, action) => {
       };
     }
 
-    case DELETE_JOB_COMPLETE: {
+    case DELETE_JOB_COMPLETE:
+    {
       const jobId = action.id;
 
-      const byId = {...state.byId};
+      const byId = {
+        ...state.byId,
+      };
       const ids = [...state.ids];
 
       ids.filter((id) => {
@@ -121,9 +133,11 @@ const builds = (state = initialState, action) => {
   }
 };
 
-
 export default builds;
 
 export const getBuild = (state, buildId) => state.byId[buildId];
 
-export const getBuildsForJob = (state, jobId) => state.ids.map(id => state.byId[id]).filter(build => build.jobId === jobId);
+export const getBuildsForJob = (state, jobId) => state
+  .ids
+  .map(id => state.byId[id])
+  .filter(build => build.jobId === jobId);

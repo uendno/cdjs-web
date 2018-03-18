@@ -39,8 +39,9 @@ class BuildComponent extends Component {
           <div className="header-info">
             <Button
               className="button-with-icon no-text back-button"
-              onClick={this._handleCancel.bind(this)}
-            ><i className="fa fa-arrow-left" aria-hidden="true"/>
+              onClick={this
+              ._handleCancel
+              .bind(this)}><i className="fa fa-arrow-left" aria-hidden="true"/>
             </Button>
             <span className="page-title">Build #{build && build.number}</span>
 
@@ -55,7 +56,10 @@ class BuildComponent extends Component {
                 <div className="build-progress-component-wrapper">
                   <BuildProgressComponent build={build} includeDescription/>
                 </div>
-                                Run on: <b>{build.agent ? build.agent.name : null}</b>
+                Run on:
+                <b>{build.agent
+                    ? build.agent.name
+                    : null}</b>
               </Panel>
             </div>
 
@@ -84,18 +88,14 @@ class BuildComponent extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  build: getBuild(state, ownProps.match.params.buildId) || {},
+  build: getBuild(state, ownProps.match.params.buildId) || {}
 });
 
 BuildComponent.propTypes = {
   build: PropTypes.object.isRequired,
   getBuildDetails: PropTypes.func.isRequired,
   readLogs: PropTypes.func.isRequired,
-  cancelReadLogs: PropTypes.func.isRequired,
+  cancelReadLogs: PropTypes.func.isRequired
 };
 
-export default withRouter(connect(mapStateToProps, {
-  getBuildDetails,
-  readLogs,
-  cancelReadLogs,
-})(BuildComponent));
+export default withRouter(connect(mapStateToProps, {getBuildDetails, readLogs, cancelReadLogs})(BuildComponent));

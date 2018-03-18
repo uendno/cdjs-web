@@ -1,6 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Row, Col, Panel, Table, Badge} from 'react-bootstrap';
+import {
+  Button,
+  Row,
+  Col,
+  Panel,
+  Table,
+  Badge,
+} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Switch from 'react-bootstrap-switch';
 import moment from 'moment';
@@ -44,10 +51,13 @@ class NodesComponent extends Component {
         <td>{this._renderStatus(agent.status)}</td>
         <td>{this._renderLastOnline(agent.status, agent.lastOnline)}</td>
         <td>{agent.numberOfConcurrentBuilds}</td>
-        <td>{agent.tags.map((tag, index) =>
-          // eslint-disable-next-line
-           (<Badge key={`${tag}-${index}`}>{tag}</Badge>)
-          )}
+        <td>{agent
+            .tags
+            .map((tag, index) =>
+            // eslint-disable-next-line
+            (
+              <Badge key={`${tag}-${index}`}>{tag}</Badge>
+            ))}
         </td>
         <td>
           <Switch
@@ -87,9 +97,9 @@ class NodesComponent extends Component {
       {
         return (
           <span className="status online">
-            <i className="fa fa-check-circle"/>
+              <i className="fa fa-check-circle"/>
               Online
-          </span>
+            </span>
         );
       }
 
@@ -97,9 +107,9 @@ class NodesComponent extends Component {
       {
         return (
           <span className="status offline">
-            <i className="fa fa-times-circle"/>
+              <i className="fa fa-times-circle"/>
               Offline
-          </span>
+            </span>
         );
       }
 
@@ -107,9 +117,9 @@ class NodesComponent extends Component {
       {
         return (
           <span className="status waiting-for-connection">
-            <i className="fa fa-question-circle"/>
+              <i className="fa fa-question-circle"/>
               Waiting for connection
-          </span>
+            </span>
         );
       }
 

@@ -10,14 +10,18 @@ class LogViewerComponent extends Component {
       <div key={index} className="line">
         <div className="left">
           <span className="timestamp">{log.timestamp}</span>
-          <span
-            className={`level ${log.level}`}
-          >[{log.level.toUpperCase()}]
+          <span className={`level ${log.level}`}>[{log
+              .level
+              .toUpperCase()}]
           </span>
         </div>
         <span
-          className={`message ${log.level} ${log.label || ''} ${log.message.includes('[cd.js]') ? 'runner' : ''}`}
-        > {log.message}
+          className={`message ${log.level} ${log.label || ''} ${log
+          .message
+          .includes('[cd.js]')
+          ? 'runner'
+          : ''}`}>
+          {log.message}
         </span>
       </div>
     );
@@ -34,12 +38,10 @@ class LogViewerComponent extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  logs: getCurrentBuildLogs(state),
-});
+const mapStateToProps = state => ({logs: getCurrentBuildLogs(state)});
 
 LogViewerComponent.propTypes = {
-  logs: PropTypes.array.isRequired,
+  logs: PropTypes.array.isRequired
 };
 
 export default connect(mapStateToProps, {})(LogViewerComponent);

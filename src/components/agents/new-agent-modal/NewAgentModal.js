@@ -8,13 +8,12 @@ import {closeAddAgentModal, addAgent} from '../../../actions/agents';
 import AgentNameFormComponent from '../agent-name-form/AgentNameForm';
 import './NewAgentModal.css';
 
-
 class NewAgentModal extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      showCopiedTooltip: false,
+      showCopiedTooltip: false
     };
   }
 
@@ -31,17 +30,11 @@ class NewAgentModal extends Component {
             <CopyToClipboard
               text={token}
               onCopy={() => {
-                        this.setState({
-                            showCopiedTooltip: true,
-                        });
-
-                        setTimeout(() => {
-                            this.setState({
-                                showCopiedTooltip: false,
-                            });
-                        }, 500);
-                    }}
-            >
+              this.setState({showCopiedTooltip: true});
+              setTimeout(() => {
+                this.setState({showCopiedTooltip: false});
+              }, 500);
+            }}>
               <button className="btn btn-default copy-button">
                 <i className=" fa fa-files-o" aria-hidden="true"/>
               </button>
@@ -49,13 +42,14 @@ class NewAgentModal extends Component {
           </div>
           <Tooltip
             placement="bottom"
-            className={`tool-tip ${showCopiedTooltip ? 'in' : ''}`}
-            id="copied-tooltip"
-          >
-                        Copied!
+            className={`tool-tip ${showCopiedTooltip
+            ? 'in'
+            : ''}`}
+            id="copied-tooltip">
+            Copied!
           </Tooltip>
-          <p className="note">Warning: Copy this access token before closing this modal in order use it to
-                        connect agent to master.
+          <p className="note">Warning: Copy this access token before closing this modal in
+            order use it to connect agent to master.
           </p>
         </FormGroup>
       );
@@ -72,29 +66,30 @@ class NewAgentModal extends Component {
       <Modal
         className="new-node-modal-component"
         show={show && mode === 'add'}
-        onHide={() => closeAddAgentModal()}
-      >
+        onHide={() => closeAddAgentModal()}>
         <Modal.Header closeButton>
           <Modal.Title>Add new agent</Modal.Title>
         </Modal.Header>
         <Modal.Body className="body">
           <div className="content">
-            <AgentNameFormComponent disabled={token && true}/>
-            {this._renderTokenInfo(token)}
+            <AgentNameFormComponent disabled={token && true}/> {this._renderTokenInfo(token)}
           </div>
         </Modal.Body>
         <Modal.Footer>
           <Button
-            bsStyle={token ? 'default' : 'primary'}
+            bsStyle={token
+            ? 'default'
+            : 'primary'}
             onClick={() => {
-                                if (token) {
-                                    closeAddAgentModal();
-                                } else {
-                                    addAgent();
-                                }
-                            }}
-            disabled={loading === true}
-          >{token ? 'Close' : 'Add'}
+            if (token) {
+              closeAddAgentModal();
+            } else {
+              addAgent();
+            }
+          }}
+            disabled={loading === true}>{token
+              ? 'Close'
+              : 'Add'}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -105,14 +100,9 @@ class NewAgentModal extends Component {
 NewAgentModal.propTypes = {
   data: PropTypes.object.isRequired,
   closeAddAgentModal: PropTypes.func.isRequired,
-  addAgent: PropTypes.func.isRequired,
+  addAgent: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-  data: getEditAgentData(state),
-});
+const mapStateToProps = state => ({data: getEditAgentData(state)});
 
-export default connect(mapStateToProps, {
-  closeAddAgentModal,
-  addAgent,
-})(NewAgentModal);
+export default connect(mapStateToProps, {closeAddAgentModal, addAgent})(NewAgentModal);

@@ -13,7 +13,6 @@ class CredentialsComponent extends Component {
     requestAllCredentials();
   }
 
-
   _renderCredential(credential) {
     const {deleteCredential, openCreateCredentialModal} = this.props;
 
@@ -32,10 +31,10 @@ class CredentialsComponent extends Component {
           <Button
             className="action-button red"
             onClick={() => {
-                                if (window.confirm('Are you sure want to delete this credential?')) {
-                                    deleteCredential(credential._id);
-                                }
-                            }}
+            if (window.confirm('Are you sure want to delete this credential?')) {
+              deleteCredential(credential._id);
+            }
+          }}
           ><i className="fa fa-trash-o" aria-hidden="true"/>
           </Button>
         </td>
@@ -45,10 +44,9 @@ class CredentialsComponent extends Component {
 
   _renderCredentialData(credential) {
     switch (credential.type) {
-      case 'username/password': {
-        return (
-          `${credential.data.username}/${credential.data.password}`
-        );
+      case 'username/password':
+      {
+        return (`${credential.data.username}/${credential.data.password}`);
       }
 
       default:
@@ -69,7 +67,8 @@ class CredentialsComponent extends Component {
             <Button
               className="button-with-icon action-button new-credential-button"
               onClick={() => openCreateCredentialModal('create')}
-            ><i className="fa fa-plus-circle" aria-hidden="true"/> New Credential
+            ><i className="fa fa-plus-circle" aria-hidden="true"/>
+              New Credential
             </Button>
           </div>
         </div>
@@ -83,7 +82,7 @@ class CredentialsComponent extends Component {
                     <th>Type</th>
                     <th>Data</th>
                     <th>Created at</th>
-                    <th />
+                    <th/>
                   </tr>
                 </thead>
                 <tbody>
@@ -105,12 +104,6 @@ CredentialsComponent.propTypes = {
   deleteCredential: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  credentials: getCredentials(state),
-});
+const mapStateToProps = state => ({credentials: getCredentials(state)});
 
-export default connect(mapStateToProps, {
-  openCreateCredentialModal,
-  requestAllCredentials,
-  deleteCredential,
-})(CredentialsComponent);
+export default connect(mapStateToProps, {openCreateCredentialModal, requestAllCredentials, deleteCredential})(CredentialsComponent);

@@ -1,4 +1,4 @@
-import {GET_USER_PERMISSIONS_COMPLETE} from '../actions/types';
+import {GET_USER_PERMISSIONS_COMPLETE} from '../constants/actions';
 
 const initialState = {
   byId: {},
@@ -7,7 +7,8 @@ const initialState = {
 
 const permissions = (state = initialState, action) => {
   switch (action.type) {
-    case GET_USER_PERMISSIONS_COMPLETE: {
+    case GET_USER_PERMISSIONS_COMPLETE:
+    {
       const permissions = action.data;
       const byId = {};
       const ids = [];
@@ -17,10 +18,7 @@ const permissions = (state = initialState, action) => {
         ids.push(permission._id);
       });
 
-      return {
-        byId,
-        ids,
-      };
+      return {byId, ids};
     }
     default:
       return state;
@@ -29,4 +27,7 @@ const permissions = (state = initialState, action) => {
 
 export default permissions;
 
-export const getPermissionsForAnUser = (state, userId) => state.ids.map(id => state.byId[id]).filter(p => p.user === userId);
+export const getPermissionsForAnUser = (state, userId) => state
+  .ids
+  .map(id => state.byId[id])
+  .filter(p => p.user === userId);

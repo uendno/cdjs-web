@@ -1,14 +1,11 @@
-import {LOGIN} from './types';
+import {LOGIN, LOGOUT} from '../constants/actions';
 import localStorageSrv from '../services/localStorage';
-import {post} from '../helpers/api';
+import {post, del} from '../helpers/api';
 
 export const login = async(email, password) => ({
   type: LOGIN,
-  func: () => {
-    const response = post('/auth', {
-      email,
-      password,
-    });
+  func: async () => {
+    const response = await post('/auth', {email, password});
 
     const accessToken = response.data;
     localStorageSrv.set('accessToken', accessToken);
@@ -17,4 +14,10 @@ export const login = async(email, password) => ({
   },
 });
 
-export const logout = async() => ({});
+export const logout = async() => ({
+  type: LOGOUT,
+  func: async () => {
+    await del('/auth');
+    localStorageSrv.remove('accessToken');
+  },
+});

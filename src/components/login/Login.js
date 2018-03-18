@@ -12,7 +12,7 @@ class Login extends Component {
     this.state = {
       email: null,
       password: null,
-      help: null,
+      help: null
     };
   }
 
@@ -40,11 +40,8 @@ class Login extends Component {
               id="email"
               value={email || ''}
               onChange={(event) => {
-                            this.setState({
-                                email: event.target.value,
-                            });
-                        }}
-            />
+              this.setState({email: event.target.value});
+            }}/>
           </FormGroup>
           <FormGroup controlId="password">
             <ControlLabel>Password</ControlLabel>
@@ -52,20 +49,19 @@ class Login extends Component {
               type="password"
               value={password || ''}
               onChange={(event) => {
-                            this.setState({
-                                password: event.target.value,
-                            });
-                        }}
-            />
+              this.setState({password: event.target.value});
+            }}/>
           </FormGroup>
           {help && <HelpBlock>{help}</HelpBlock>}
-          <Button bsClass="btn btn-success login-button" onClick={this._submit.bind(this)}>Login</Button>
+          <Button
+            bsClass="btn btn-success login-button"
+            onClick={this
+            ._submit
+            .bind(this)}>Login</Button>
         </div>
       </div>
     );
   }
 }
 
-export default connect(null, {
-  login,
-})(Login);
+export default connect(null, {login})(Login);
