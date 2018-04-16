@@ -5,8 +5,8 @@ const jobs = (state = {
   byId: {},
   ids: [],
 }, action) => {
-  const ids = [];
-  const byId = {};
+  const ids = [...state.ids];
+  const byId = {...state.byId};
 
   const addOrUpdateJobIfNeeded = (job) => {
     let clone = {
